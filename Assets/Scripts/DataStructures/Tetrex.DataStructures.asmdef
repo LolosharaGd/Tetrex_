@@ -1,0 +1,14 @@
+{
+    "name": "Tetrex.DataStructures",
+    "rootNamespace": "Tetrex.DataStructures",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

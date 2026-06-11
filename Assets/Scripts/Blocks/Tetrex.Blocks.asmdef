@@ -1,0 +1,16 @@
+{
+    "name": "Tetrex.Blocks",
+    "rootNamespace": "Tetrex.Blocks",
+    "references": [
+        "GUID:141c69e15e52ec447bd2d8f2cb39a6a6"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

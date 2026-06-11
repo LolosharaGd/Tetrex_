@@ -1,0 +1,714 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f1d299f69bc80e498c63e145c4597fa, type: 3}
+  m_Name: OptionsScriptableObject
+  m_EditorClassIdentifier: 
+  blockPrefabs:
+  - name: NormalBlock
+    block: {fileID: 440199156720638517, guid: 3ca268be528fb284f971d168e4dd3106, type: 3}
+    previewBlock: {fileID: 2986656510303154813, guid: 50dcffd74ae28aa43ab7b865b609c3f1, type: 3}
+    rarity: 3
+  - name: Remove Plus
+    block: {fileID: 440199156720638517, guid: e4dbcb76ac3c7a74b84315bd0ea47498, type: 3}
+    previewBlock: {fileID: 8125042169453184298, guid: f34f12855e857ac4d81ebe72d034b077, type: 3}
+    rarity: 1
+  - name: Remove Cross
+    block: {fileID: 440199156720638517, guid: 518e40daeb1dd154b98e2f90155945fb, type: 3}
+    previewBlock: {fileID: 9089933198555495380, guid: 44282cb101a3a4c4c99c5e72924e701f, type: 3}
+    rarity: 1
+  - name: Remove Square
+    block: {fileID: 440199156720638517, guid: c0a6da82691116b428bacd6ebe0e16c7, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: 5d079ae91e9e06d4db2c39bae73b4062, type: 3}
+    rarity: 0
+  - name: Remove Row
+    block: {fileID: 440199156720638517, guid: 33eb8121ab34ff44d879235426a6c010, type: 3}
+    previewBlock: {fileID: 573764850822565702, guid: af39ef8e0742b18489ecf6096aece86e, type: 3}
+    rarity: 2
+  - name: Spawn Square
+    block: {fileID: 440199156720638517, guid: e00dbcdb4e0c93944821712e1f7f7191, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: b46c4efd29da7ab4aa7a8975744d4f50, type: 3}
+    rarity: 0
+  - name: Spawn Dive
+    block: {fileID: 440199156720638517, guid: 004c3622f78469741a7e7b79940d376b, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: 92a1935a8c0f53d4abc1f59b2f5a2a5c, type: 3}
+    rarity: 2
+  - name: Stop
+    block: {fileID: 440199156720638517, guid: c2e983ddfa36ddd429a0a76ba471f967, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: 5646a0f22edcf6f429ae9c8e5d4e5f0a, type: 3}
+    rarity: 0
+  - name: Invert Row
+    block: {fileID: 440199156720638517, guid: 6da977effeb14ed4e9db0c197dbdd3e6, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: cd1b103488bd42a4b9ed15e81f4057f9, type: 3}
+    rarity: 1
+  - name: Phantom
+    block: {fileID: 440199156720638517, guid: 55080b36c45099f40a4cd1b81cd1a54b, type: 3}
+    previewBlock: {fileID: 8125042169453184298, guid: 962cb94ee27d13a48b4109cce531e780, type: 3}
+    rarity: 1
+  - name: Spawn Dash Right
+    block: {fileID: 440199156720638517, guid: 9fa3885808b97974bb4eb9a3fc55ad0b, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: 7a625750397addf429885e50a009a600, type: 3}
+    rarity: 0
+  - name: Spawn Dash Left
+    block: {fileID: 440199156720638517, guid: 8e1c689767f93564a95d66a912f38cd9, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: 98655d2317bdca64a9e9773a8a0668e5, type: 3}
+    rarity: 0
+  - name: Spawn Diagonal
+    block: {fileID: 440199156720638517, guid: 922cc4f2ff438e04084ab63bdcf4aae8, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: 8ec831bd0005d124d9f8ec830d9d8062, type: 3}
+    rarity: 1
+  - name: Spawn Drop
+    block: {fileID: 440199156720638517, guid: 20e0d20e47478e74585423a44f65af4f, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: 814121d4bdf36924492563741e6b18cc, type: 3}
+    rarity: 2
+  - name: Remove Dive
+    block: {fileID: 440199156720638517, guid: bca748896c5b48547ac6b5f9e10fff8b, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: 17d6f99567431a64b9777dfb73d72cc8, type: 3}
+    rarity: 1
+  - name: Spawn Fill
+    block: {fileID: 440199156720638517, guid: 1641bfe9965f9b24eb4db5c0c5b18d13, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: a1aedcbb8bfd06a4abd5c3ce1e27f402, type: 3}
+    rarity: 2
+  - name: Gravity
+    block: {fileID: 440199156720638517, guid: e1034aad44999e342b0592832aa58fd9, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: 24242e327c5966145922ebafd3614d8e, type: 3}
+    rarity: 2
+  - name: EMined Dive
+    block: {fileID: 440199156720638517, guid: 455acbd36a5199945beaef3fd8693a32, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: 1a7d8f7bda6bc9240a9834e5932be378, type: 3}
+    rarity: 1
+  - name: Cursed Row
+    block: {fileID: 440199156720638517, guid: 4850b9589ec997c4cb99bc40affe6c7d, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: 6b52c3a9c914c2043aad49be2299f03c, type: 3}
+    rarity: 0
+  blockEffectPrefabs:
+  - {fileID: 0}
+  - {fileID: 2543644913401312571, guid: ac0b3c6dc8b6cd049a45613feb7a0d21, type: 3}
+  blockShapes:
+  - name: O
+    startingPosition: {x: 1, y: 1}
+    positions:
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    - {x: 1, y: 0}
+    rotations:
+    - rotationMovements:
+      - {x: 0, y: 1}
+      - {x: 1, y: 0}
+      - {x: 0, y: -1}
+      - {x: -1, y: 0}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 1, y: 0}
+      - {x: 0, y: -1}
+      - {x: -1, y: 0}
+      - {x: 0, y: 1}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 0, y: -1}
+      - {x: -1, y: 0}
+      - {x: 0, y: 1}
+      - {x: 1, y: 0}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: -1, y: 0}
+      - {x: 0, y: 1}
+      - {x: 1, y: 0}
+      - {x: 0, y: -1}
+      nextRotationIndex: 0
+  - name: T
+    startingPosition: {x: 1, y: 1}
+    positions:
+    - {x: 0, y: 0}
+    - {x: -1, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 0}
+    rotations:
+    - rotationMovements:
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 1, y: 1}
+      - {x: 1, y: -1}
+      - {x: -1, y: -1}
+      - {x: -1, y: 1}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 1, y: -1}
+      - {x: -1, y: -1}
+      - {x: -1, y: 1}
+      - {x: 1, y: 1}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: -1, y: -1}
+      - {x: -1, y: 1}
+      - {x: 1, y: 1}
+      - {x: 1, y: -1}
+      nextRotationIndex: 0
+  - name: I
+    startingPosition: {x: 0, y: 1}
+    positions:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    - {x: 3, y: 0}
+    rotations:
+    - rotationMovements:
+      - {x: 2, y: 2}
+      - {x: 1, y: -2}
+      - {x: -1, y: -1}
+      - {x: -2, y: 1}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 1, y: 1}
+      - {x: 0, y: -1}
+      - {x: 0, y: 0}
+      - {x: -1, y: 0}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 0, y: 0}
+      - {x: -1, y: 0}
+      - {x: 1, y: 1}
+      - {x: 0, y: -1}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: -1, y: -1}
+      - {x: -2, y: 1}
+      - {x: 2, y: 2}
+      - {x: 1, y: -2}
+      nextRotationIndex: 0
+  - name: Z
+    startingPosition: {x: 0, y: 2}
+    positions:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 1, y: -1}
+    - {x: 2, y: -1}
+    rotations:
+    - rotationMovements:
+      - {x: 2, y: 1}
+      - {x: 0, y: -2}
+      - {x: -1, y: 0}
+      - {x: -1, y: 1}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 1, y: 0}
+      - {x: -1, y: -1}
+      - {x: 0, y: 1}
+      - {x: 0, y: 0}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 0, y: 1}
+      - {x: 0, y: 0}
+      - {x: 1, y: 0}
+      - {x: -1, y: -1}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: -1, y: 0}
+      - {x: -1, y: 1}
+      - {x: 2, y: 1}
+      - {x: 0, y: -2}
+      nextRotationIndex: 0
+  - name: S
+    startingPosition: {x: 0, y: 1}
+    positions:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 1, y: 1}
+    - {x: 2, y: 1}
+    rotations:
+    - rotationMovements:
+      - {x: 1, y: 2}
+      - {x: 1, y: -1}
+      - {x: 0, y: -1}
+      - {x: -2, y: 0}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 0, y: 1}
+      - {x: 0, y: 0}
+      - {x: 1, y: 0}
+      - {x: -1, y: -1}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 1, y: 0}
+      - {x: -1, y: -1}
+      - {x: 0, y: 1}
+      - {x: 0, y: 0}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 0, y: -1}
+      - {x: -2, y: 0}
+      - {x: 1, y: 2}
+      - {x: 1, y: -1}
+      nextRotationIndex: 0
+  - name: L
+    startingPosition: {x: 1, y: 3}
+    positions:
+    - {x: 0, y: 0}
+    - {x: 0, y: -1}
+    - {x: 0, y: -2}
+    - {x: 1, y: -2}
+    rotations:
+    - rotationMovements:
+      - {x: 1, y: -1}
+      - {x: -1, y: -1}
+      - {x: -1, y: 1}
+      - {x: 1, y: 1}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: -1, y: 1}
+      - {x: 1, y: 1}
+      - {x: 1, y: -1}
+      - {x: -1, y: -1}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: -2, y: 0}
+      - {x: 0, y: 2}
+      - {x: 2, y: 0}
+      - {x: 0, y: -2}
+      nextRotationIndex: 0
+  - name: J
+    startingPosition: {x: 1, y: 3}
+    positions:
+    - {x: 0, y: 0}
+    - {x: 0, y: -1}
+    - {x: 0, y: -2}
+    - {x: -1, y: -2}
+    rotations:
+    - rotationMovements:
+      - {x: 1, y: -1}
+      - {x: -1, y: -1}
+      - {x: -1, y: 1}
+      - {x: 1, y: 1}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: -1, y: 1}
+      - {x: 1, y: 1}
+      - {x: 1, y: -1}
+      - {x: -1, y: -1}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 0, y: 2}
+      - {x: 2, y: 0}
+      - {x: 0, y: -2}
+      - {x: -2, y: 0}
+      nextRotationIndex: 0
+  - name: Q
+    startingPosition: {x: 0, y: 0}
+    positions:
+    - {x: 0, y: 0}
+    - {x: 1, y: 2}
+    - {x: 2, y: 2}
+    - {x: 2, y: 1}
+    rotations:
+    - rotationMovements:
+      - {x: 1, y: 1}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: -1, y: -1}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: -1, y: 1}
+      - {x: 1, y: -1}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 0, y: 0}
+      - {x: 1, y: 1}
+      - {x: -1, y: -1}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      nextRotationIndex: 0
+    - rotationMovements:
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 1, y: -1}
+      - {x: -1, y: 1}
+      - {x: 0, y: 0}
+      nextRotationIndex: 0
+  blockFallSpeed: 1.2
+  blockHorizMoveSpeed: 10
+  blockHorizMoveFirstWait: 0.33333334
+  blockVertMoveSpeed: 15
+  blockVertMoveFirstWait: 0.5
+  scoreRewards: 0000000064000000fa000000f4010000e8030000c4090000
+  scoreGoals: fa000000e8030000dc050000d0070000b80b0000a00f000088130000581b000028230000f82a0000b036000068420000204e0000a861000030750000409c0000
+  allBlocks:
+  - name: Remove Plus
+    description: Removes block in a plus-shape
+    notes: Literally just 5 lines of code
+    isEquipped: 0
+    spritePrefab: {fileID: 8125042169453184298, guid: d37fbe0012c8a3c43b509138091ca597, type: 3}
+    cost: 2
+    rarity: 1
+    alignment: 1
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 1
+  - name: Remove Cross
+    description: Removes blocks in a cross-shape
+    notes: I, personally, hate this block
+    isEquipped: 0
+    spritePrefab: {fileID: 9089933198555495380, guid: f423fb551d2bbcd4983b83d562154a94, type: 3}
+    cost: 1
+    rarity: 0
+    alignment: 0
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 2
+  - name: Remove Square
+    description: Removes 8 adjacent blocks
+    notes: Literally just + and X blocks combined
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: 06185cbefd2b6c34e95e54142d43f2a6, type: 3}
+    cost: 3
+    rarity: 0
+    alignment: 1
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 3
+  - name: Remove Row
+    description: Clears row it is in
+    notes: Pretty good for maintaining combo
+    isEquipped: 0
+    spritePrefab: {fileID: 573764850822565702, guid: 7414faf839ee51a4a8c3d37e837c4b7c, type: 3}
+    cost: 3
+    rarity: 1
+    alignment: 1
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 4
+  - name: Spawn Square
+    description: Fills 8 adjacent spaces
+    notes: With this you can clear 5 rows with one piece
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: a28ea9ac2c536294299d067fa6c20c6c, type: 3}
+    cost: 3
+    rarity: 0
+    alignment: 1
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 5
+  - name: Spawn Dive
+    description: Fills every empty space below itself
+    notes: With this one you can clear a lot of lines in one piece
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: 9adf1366e8cdf65489563c776d09a230, type: 3}
+    cost: 4
+    rarity: 2
+    alignment: 1
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 6
+  - name: Stop
+    description: Lands currently controlled blocks mid-air
+    notes: I literally used this one 3-4 times ever
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: 883932bd76e8dab4fbac32f2ac0c6c4c, type: 3}
+    cost: 1
+    rarity: 0
+    alignment: 1
+    blockActivatesOnLanding: 0
+    blockActivatesOnClearRow: 0
+    blockActivatesOnUserInput: 1
+    blockSelfDestructs: 0
+    saveBitIndex: 7
+  - name: Invert Row
+    description: Inverts row it is in
+    notes: 'todo: add a note for this block'
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: fcc1f317e391d194da3e84c23033a324, type: 3}
+    cost: 2
+    rarity: 1
+    alignment: 1
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 8
+  - name: Phantom
+    description: Disappears
+    notes: Hey that block is pr
+    isEquipped: 0
+    spritePrefab: {fileID: 8125042169453184298, guid: 1d17368d304234d4eb0f61c8679b2c50, type: 3}
+    cost: 2
+    rarity: 1
+    alignment: 1
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 9
+  - name: Spawn Dash Right
+    description: Fills empty spaces to its right
+    notes: Can be used as a row clear if placed against the left wall
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: ffb0d48b9fcf2c2469ee12b03ea5d1bb, type: 3}
+    cost: 3
+    rarity: 1
+    alignment: 1
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 10
+  - name: Spawn Dash Left
+    description: Fills empty spaces to its left
+    notes: Can be used as a row clear if placed against the right wall
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: 0fe5d85b8bc238f428f4e3f5c4b044f6, type: 3}
+    cost: 3
+    rarity: 1
+    alignment: 1
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 11
+  - name: Spawn Diagonal
+    description: Fills empty spaces diagonally down left and down right
+    notes: Can be quite annoying if the stack is high
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: 17abb294b70993c4a90945a169b54080, type: 3}
+    cost: 2
+    rarity: 0
+    alignment: 1
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 12
+  - name: Spawn Drop
+    description: Fills highest hole with in its and neighboring columns
+    notes: If you are confused - just drops 3 blocks until they land on a hole below
+      it
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: 69cb0d7dfbbddae48b061a27d6c1c799, type: 3}
+    cost: 2
+    rarity: 1
+    alignment: 1
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 13
+  - name: Remove Dive
+    description: Removes every block below itself
+    notes: what did i think when creating this?
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: df0e7dbf889a86940aec0f45009f24cd, type: 3}
+    cost: 2
+    rarity: 1
+    alignment: 0
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 14
+  - name: Spawn Fill
+    description: Fills lowest 5 empty spaces
+    notes: Can give you 5 rows cleared at once!
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: 386e0f9c29612484c95b4e999c9d0d75, type: 3}
+    cost: 4
+    rarity: 2
+    alignment: 2
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 15
+  - name: Gravity
+    description: Makes every block fall farthest it can
+    notes: g
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: 1c206be626571e8468c6c8a3d1f77243, type: 3}
+    cost: 5
+    rarity: 2
+    alignment: 2
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 16
+  - name: EMined Dive
+    description: Places a mine on every spot below itself
+    notes: does not immediately destroy blocks tho
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: 31e67fdc1684f764a984235e45ba57d1, type: 3}
+    cost: 3
+    rarity: 0
+    alignment: 0
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 17
+  - name: Cursed Row
+    description: When a row is cleared with this block in it, it doesn't count towards
+      points given
+    notes: ur not supposed t oget this
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: 88665d3652d28c64293a9c2dc4226a7a, type: 3}
+    cost: 1
+    rarity: 4
+    alignment: 1
+    blockActivatesOnLanding: 0
+    blockActivatesOnClearRow: 0
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 0
+    saveBitIndex: 18
+  scrollBlockSpacing: 1.25
+  centralScrollBlockAddedSpacing: 0.25
+  normalBlockSize: 1
+  centralBlockSize: 1.5
+  scrollBlockSwitchDuration: 0.075
+  blockScrollSwitchDuration: 0.1
+  minColor: {r: 0.099, g: 0.09405, b: 0.09405, a: 0}
+  maxColor: {r: 0.199, g: 0.184075, b: 0.16915, a: 0}
+  colorChangeSpeed: 0.005
+  blockMoveSound:
+    name: Move
+    clips:
+    - {fileID: 8300000, guid: c7ceb920d48326c4a844610288a43a09, type: 3}
+    - {fileID: 8300000, guid: 1fd71642a047a7b41bfb39cd394352d4, type: 3}
+    - {fileID: 8300000, guid: d6901095ce6d8a8408dc03eb310d88ca, type: 3}
+    - {fileID: 8300000, guid: fca0ae9ea37a7de4e8aa67bc415f2f3b, type: 3}
+    - {fileID: 8300000, guid: bc107bdd71d558748aea943daddff20e, type: 3}
+  blockRotateSound:
+    name: Rotate
+    clips:
+    - {fileID: 8300000, guid: e7549859d25ce944e95b1b98d051f59a, type: 3}
+    - {fileID: 8300000, guid: bfc8b4527381a4b41a47848c7b39f432, type: 3}
+    - {fileID: 8300000, guid: 84ade52df72c3f643940bbc7b76f67fe, type: 3}
+    - {fileID: 8300000, guid: 3e70a588063d3ce4789bfc40bc0680c5, type: 3}
+    - {fileID: 8300000, guid: 532e9cf92b9342e4ca22c715d7c18b7a, type: 3}
+  blockDashSound:
+    name: Dash
+    clips:
+    - {fileID: 8300000, guid: 43c9476b51f186a4a9f5f7fa237353e1, type: 3}
+    - {fileID: 8300000, guid: d9580aae40539034ba399d49a3b3a879, type: 3}
+    - {fileID: 8300000, guid: 786e8dfd26d0ed2459708ee0685cad1d, type: 3}
+    - {fileID: 8300000, guid: a909e2cf65b1ad34dbfc1bfa989eba95, type: 3}
+    - {fileID: 8300000, guid: fabae1027dd706946b6e5bf6a7fb709b, type: 3}
+  blockTrashSound:
+    name: Trash
+    clips:
+    - {fileID: 8300000, guid: a99c7671fee1eef4da68cbcd3809cfcb, type: 3}
+    - {fileID: 8300000, guid: 75f351dc5c959f342ba152b8fe0c2196, type: 3}
+    - {fileID: 8300000, guid: 9583a08a12374db448a3924a05f90d66, type: 3}
+    - {fileID: 8300000, guid: a3f575e9b4d78eb40bace6bef4ccd40d, type: 3}
+    - {fileID: 8300000, guid: 69eae73a5c1220f468d45a72ecb7af02, type: 3}
+  rowClearSounds:
+  - name: 0
+    clips: []
+  - name: 1
+    clips:
+    - {fileID: 8300000, guid: 813a2a3d797fba744855f69b243ef667, type: 3}
+    - {fileID: 8300000, guid: a9434733996236848977de4c916caf1f, type: 3}
+    - {fileID: 8300000, guid: 8bd54611769febe4aa1c784966884605, type: 3}
+  - name: 2
+    clips:
+    - {fileID: 8300000, guid: 259edebccea4c7144971449e6427b003, type: 3}
+    - {fileID: 8300000, guid: 183f8684902eeb24d896a89fd4b53331, type: 3}
+    - {fileID: 8300000, guid: 6f1fc07a034a3f147893bd723a207e7f, type: 3}
+  - name: 3
+    clips:
+    - {fileID: 8300000, guid: 22e6647923b4ce14c996b217b0dba559, type: 3}
+    - {fileID: 8300000, guid: f73ccefcd55c3e14483b1a01d494c076, type: 3}
+    - {fileID: 8300000, guid: f2abfda38cb08264a9dc0eef8e1cde3c, type: 3}
+  - name: 4
+    clips:
+    - {fileID: 8300000, guid: 639183ce248ff364d9271d10e3c0e60e, type: 3}
+    - {fileID: 8300000, guid: bcc62b350c2a1e84ba7c685f6976bafb, type: 3}
+    - {fileID: 8300000, guid: cba531ea5979c4f4d87716edf00e7001, type: 3}
+  - name: 5
+    clips:
+    - {fileID: 8300000, guid: ff4089fab999fc94290e2e1d58e7f3a6, type: 3}
+    - {fileID: 8300000, guid: f56c095d2f743a046b0df67acc93d2ae, type: 3}
+    - {fileID: 8300000, guid: 215079f93a368a348a17f6d8a2c5dc42, type: 3}
+  stageMusic:
+  - name: 0 - Machine code
+    clips:
+    - {fileID: 8300000, guid: 6921b9ed9cd5a2841bc9e07def2319cc, type: 3}
+    - {fileID: 8300000, guid: 011fcacb691e1c3499ef0e36c5af0b19, type: 3}
+    - {fileID: 8300000, guid: 9fe6755ca507de74ea1b6a6c5c69ae1b, type: 3}
+    - {fileID: 8300000, guid: b52b1504810fd4f478f1934fe76864d7, type: 3}
+  - name: 1 - Beginning
+    clips:
+    - {fileID: 8300000, guid: 6921b9ed9cd5a2841bc9e07def2319cc, type: 3}
+    - {fileID: 8300000, guid: 011fcacb691e1c3499ef0e36c5af0b19, type: 3}
+    - {fileID: 8300000, guid: 9fe6755ca507de74ea1b6a6c5c69ae1b, type: 3}
+    - {fileID: 8300000, guid: b52b1504810fd4f478f1934fe76864d7, type: 3}
+  - name: 2 - Acceleration
+    clips:
+    - {fileID: 8300000, guid: 64df734e40cc34c4b912f408099530c4, type: 3}
+    - {fileID: 8300000, guid: def4f0839b67194459f3d84c2bde7e95, type: 3}
+    - {fileID: 8300000, guid: 98e322f7d7b7e904588fec9d265970e9, type: 3}
+    - {fileID: 8300000, guid: b3fe10e10f5286249924b637f2208bb0, type: 3}
+  - name: 3 - Avoidance
+    clips:
+    - {fileID: 8300000, guid: 8ae976a5e34b75c49b1bb06e60586688, type: 3}
+    - {fileID: 8300000, guid: a050d40305b3af04dbe9fe6fb8537dee, type: 3}
+    - {fileID: 8300000, guid: 99a1734d2007e8949b8fa4a70020cab3, type: 3}
+    - {fileID: 8300000, guid: 078b1efe3eb5c7944877c96b9d936042, type: 3}
+  stageBossMusic:
+  - name: 0 - Machine code
+    clips:
+    - {fileID: 8300000, guid: 2beea53928e6f14409624969c26514de, type: 3}
+  - name: 1 - Beginning
+    clips:
+    - {fileID: 8300000, guid: 1f68aa689a0285f4e9d3d9a744a96766, type: 3}
+  - name: 2 - Acceleration
+    clips:
+    - {fileID: 8300000, guid: e843247b9ad014f43977543c1cb73720, type: 3}
+  - name: 3 - Avoidance
+    clips:
+    - {fileID: 8300000, guid: 1f68aa689a0285f4e9d3d9a744a96766, type: 3}
+  shopMusic:
+    name: Shop
+    clips:
+    - {fileID: 8300000, guid: a3415663d2b6c2f48a9cadeb7682acbd, type: 3}
+  startMoney: 2
+  startSellTokens: 1
+  startShopSlots: 2
+  startTrashTokens: 2
