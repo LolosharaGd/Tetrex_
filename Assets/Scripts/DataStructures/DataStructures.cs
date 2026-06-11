@@ -230,5 +230,5 @@ namespace Tetrex.DataStructures
     public enum BlockRarity { COMMON, UNCOMMON, RARE, NORMALBLOCK, NONE }
     public enum BlockAlignment { CURSED, NORMAL, HOLY }
 
-    public enum BlockEffect { NOTHING, MINED }
+    public enum BlockEffect { NOTHING, MINED, PROTECTED }
 }

@@ -622,7 +622,7 @@ public class GameController : MonoBehaviour
         // Remove every controlled block
         foreach (var block in controlledBlocks.CloneViaFakeSerialization())
         {
-            RemoveBlock(block);
+            RemoveBlock(block, true);
         }
 
         // Clear controlled blocks list
@@ -879,7 +879,7 @@ public class GameController : MonoBehaviour
     /// </summary>
     /// <param name="targetBlock">NormalBlock object of the block to delete. Vector2Int position of the block to remove in the block grid</param>
     /// <returns>True if succesfully removed the block, false if removal failed</returns>
-    public bool RemoveBlock(object targetBlock)
+    public bool RemoveBlock(object targetBlock, bool ignoreBlockEffects = false)
     {
         // If given block is a block object
         if (targetBlock is NormalBlock block)
@@ -887,6 +887,13 @@ public class GameController : MonoBehaviour
             Vector2Int blockPos = block.GetPosInGrid(blockGrid);
 
             if (blockPos.x == -1) return false;
+
+            // Check for protected block effect
+            if (blockEffectGrid[blockPos.x, blockPos.y] == BlockEffect.PROTECTED && !ignoreBlockEffects)
+            {
+                RemoveBlockEffect(blockPos);
+                return false;
+            }
 
             blockGrid[blockPos.x, blockPos.y] = null;
 
@@ -906,6 +913,13 @@ public class GameController : MonoBehaviour
             // Same but check if the position is in the map first
             if (!IsPosInsideGrid(blockPos)) return false;
             if (blockGrid[blockPos.x, blockPos.y] == null) return false;
+
+            // Check for protected block effect
+            if (blockEffectGrid[blockPos.x, blockPos.y] == BlockEffect.PROTECTED && !ignoreBlockEffects)
+            {
+                RemoveBlockEffect(blockPos);
+                return false;
+            }
 
             if (blockGrid[blockPos.x, blockPos.y].isControlled) controlledBlocks.Remove(blockGrid[blockPos.x, blockPos.y]);
 
@@ -942,7 +956,7 @@ public class GameController : MonoBehaviour
             for (int x = 0; x < blockGrid.GetLength(0); x++)
             {
                 if (blockGrid[x, y] != null) if (blockGrid[x, y].GetComponent<BlockCursedRow>() != null) rowWillGivePoints = false;
-                RemoveBlock(new Vector2Int(x, y));
+                RemoveBlock(new Vector2Int(x, y), true);
             }
 
             if (moveDownOtherRows)
