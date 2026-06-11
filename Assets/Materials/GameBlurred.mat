@@ -26,7 +26,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Step_Size: 0
+    - _Step_Size: 0.0011
     - _X_Resolution: 21
     - _Y_Resolution: 21
     m_Colors: []

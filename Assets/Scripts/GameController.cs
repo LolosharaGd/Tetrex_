@@ -177,6 +177,7 @@ public class GameController : MonoBehaviour
     float prevActivateBlocks;
     float prevHold;
     float prevTrash;
+    float prevPause;
 
     /// <summary>
     /// Lines cleared before end of frame
@@ -196,12 +197,13 @@ public class GameController : MonoBehaviour
     /// </summary>
     Vector2Int heldShapePreviewStartingPosition = new Vector2Int(11, 10);
 
-    [Header("-== Loss or win ==-")]
+    [Header("-== Global ==-")]
     /// <summary>
     /// Did player lose
     /// </summary>
     public bool lost;
     public bool won;
+    public bool paused;
 
     [Header("-== Debug ==-")]
     // Debug
@@ -237,128 +239,143 @@ public class GameController : MonoBehaviour
         float activateBlocks = Input.GetAxisRaw("Activate");
         float hold = Input.GetAxisRaw("Hold");
         float trash = Input.GetAxisRaw("Trash");
+        float pause = Input.GetAxisRaw("Pause");
 
         if (!lost && !won && vfxManager.IGTransitionProgress <= 0f)
         {
-            // If pressing hoizontal movement
-            if (x != 0)
+            // Check pause
+            if (PressCheck(prevPause, pause) == 1f) Unpause();
+            if (PressCheck(pause, prevPause) == -1f)
             {
-                // If can move (timer is up)
-                if (blockHorizMoveTimer <= 0)
+                if (paused) Unpause();
+                else if (!paused) Pause();
+            }
+            if (PressCheck(pause, prevPause) == 1f) Pause();
+
+            if (!paused)
+            {
+                // If pressing hoizontal movement
+                if (x != 0)
                 {
-                    // Move
-                    bool canMoveBlocks = MoveControlledBlocks(new Vector2Int((int)x, 0));
+                    // If can move (timer is up)
+                    if (blockHorizMoveTimer <= 0)
+                    {
+                        // Move
+                        bool canMoveBlocks = MoveControlledBlocks(new Vector2Int((int)x, 0));
 
-                    // Reset timer, reset to higher value if first click
-                    blockHorizMoveTimer = prevX != x ? prop.blockHorizMoveFirstWait : 1 / prop.blockHorizMoveSpeed;
+                        // Reset timer, reset to higher value if first click
+                        blockHorizMoveTimer = prevX != x ? prop.blockHorizMoveFirstWait : 1 / prop.blockHorizMoveSpeed;
 
-                    // Play the sound
-                    soundController.PlayRandomMoveSound();
+                        // Play the sound
+                        soundController.PlayRandomMoveSound();
+                    }
                 }
-            }
-            else
-            {
-                // Set timer to 0 (timer's up)
-                blockHorizMoveTimer = 0;
-            }
-
-            // If pressing down
-            if (y == -1)
-            {
-                // If can move (timer is up)
-                if (blockVertMoveTimer <= 0)
+                else
                 {
-                    // Move
-                    blockFallTimer = 0;
-
-                    // Reset timer, reset to higher value if first click
-                    blockVertMoveTimer = prevY != y ? prop.blockVertMoveFirstWait : 1 / prop.blockVertMoveSpeed;
-
-                    // Play the sound
-                    soundController.PlayRandomMoveSound();
+                    // Set timer to 0 (timer's up)
+                    blockHorizMoveTimer = 0;
                 }
-            }
-            else
-            {
-                // Set timer to 0 (timer's up)
-                blockVertMoveTimer = 0;
-            }
 
-            // Blocks fall
-            if (blockFallTimer <= 0)
-            {
-                ControlledBlocksFall();
-
-                blockFallTimer = 1 / prop.blockFallSpeed;
-            }
-
-            // Trash shape
-            if (PressCheck(trash, prevTrash) != 0f && currentTrashTokens > 0)
-            {
-                TrashControlledBlocks();
-
-                currentTrashTokens--;
-
-                soundController.PlayRandomTrashSound();
-            }
-
-            // Block dash down
-            if (PressCheck(dash, prevDash) != 0f)
-            {
-                int iteration = 0;
-                blockFallTimer = dash == 1 ? 0 : 1.5f / prop.blockFallSpeed;
-                bool canDashDown = true;
-                do
+                // If pressing down
+                if (y == -1)
                 {
-                    canDashDown = MoveControlledBlocks(new Vector2Int(0, -1));
-                    iteration++;
+                    // If can move (timer is up)
+                    if (blockVertMoveTimer <= 0)
+                    {
+                        // Move
+                        blockFallTimer = 0;
+
+                        // Reset timer, reset to higher value if first click
+                        blockVertMoveTimer = prevY != y ? prop.blockVertMoveFirstWait : 1 / prop.blockVertMoveSpeed;
+
+                        // Play the sound
+                        soundController.PlayRandomMoveSound();
+                    }
                 }
-                while (canDashDown && iteration <= 30);
+                else
+                {
+                    // Set timer to 0 (timer's up)
+                    blockVertMoveTimer = 0;
+                }
+
+                // Blocks fall
+                if (blockFallTimer <= 0)
+                {
+                    ControlledBlocksFall();
+
+                    blockFallTimer = 1 / prop.blockFallSpeed;
+                }
+
+                // Trash shape
+                if (PressCheck(trash, prevTrash) != 0f && currentTrashTokens > 0)
+                {
+                    TrashControlledBlocks();
+
+                    currentTrashTokens--;
+
+                    soundController.PlayRandomTrashSound();
+                }
+
+                // Block dash down
+                if (PressCheck(dash, prevDash) != 0f)
+                {
+                    int iteration = 0;
+                    blockFallTimer = dash == 1 ? 0 : 1.5f / prop.blockFallSpeed;
+                    bool canDashDown = true;
+                    do
+                    {
+                        canDashDown = MoveControlledBlocks(new Vector2Int(0, -1));
+                        iteration++;
+                    }
+                    while (canDashDown && iteration <= 30);
+                }
+
+                // If pressed one of the rotate buttons
+                if (rotate != 0 && prevRotate != rotate)
+                {
+                    RotateControlledBLocks(rotate == 1);
+
+                    soundController.PlayRandomRotateSound();
+                }
+
+                // Activate all blocks that activate on user input
+                if (PressCheck(activateBlocks, prevActivateBlocks) != 0f)
+                {
+                    foreach (var block in controlledBlocks) if (block.activateOnUserInput) ActivateBlock(block);
+
+                    DoQueuedBlockActions();
+                }
+
+                // If player pressed hold
+                if (hold == 1 && prevHold == 0)
+                {
+                    SwapHeldBlocks();
+                }
+
+                // Update trash tokens text
+                string ttText = Mathf.Clamp(currentTrashTokens, 0, 99999) + "";
+                for (int i = ttText.Length; i < 5; i++) ttText = "0" + ttText;
+                trashTokensText.text = ttText;
+
+                blockFallTimer -= Time.deltaTime;
+                blockHorizMoveTimer -= Time.deltaTime;
+                blockVertMoveTimer -= Time.deltaTime;
+
+                prevX = x;
+                prevY = y;
+                prevRotate = rotate;
+                prevDash = dash;
+                prevActivateBlocks = activateBlocks;
+                prevHold = hold;
+                prevTrash = trash;
             }
-
-            // If pressed one of the rotate buttons
-            if (rotate != 0 && prevRotate != rotate)
-            {
-                RotateControlledBLocks(rotate == 1);
-
-                soundController.PlayRandomRotateSound();
-            }
-
-            // Activate all blocks that activate on user input
-            if (PressCheck(activateBlocks, prevActivateBlocks) != 0f)
-            {
-                foreach (var block in controlledBlocks) if (block.activateOnUserInput) ActivateBlock(block);
-
-                DoQueuedBlockActions();
-            }
-
-            // If player pressed hold
-            if (hold == 1 && prevHold == 0)
-            {
-                SwapHeldBlocks();
-            }
-
-            // Update trash tokens text
-            string ttText = Mathf.Clamp(currentTrashTokens, 0, 99999) + "";
-            for (int i = ttText.Length; i < 5; i++) ttText = "0" + ttText;
-            trashTokensText.text = ttText;
-
-            blockFallTimer -= Time.deltaTime;
-            blockHorizMoveTimer -= Time.deltaTime;
-            blockVertMoveTimer -= Time.deltaTime;
         }
         else if (won)
         {
             scoreManager.WinAnimationTick(Time.deltaTime);
         }
 
-        prevX = x;
-        prevY = y;
-        prevRotate = rotate;
-        prevDash = dash;
-        prevActivateBlocks = activateBlocks;
-        prevHold = hold;
-        prevTrash = trash;
+        prevPause = pause;
     }
 
     // -= Controlled blocks manipulation =-
@@ -1397,6 +1414,20 @@ public class GameController : MonoBehaviour
     public void RemoveBlockEffect(Vector2Int position)
     {
         PlaceBlockEffect(position, BlockEffect.NOTHING);
+    }
+
+    // -= Pause =-
+
+    public void Pause()
+    {
+        paused = true;
+        vfxManager.blurringNow = true;
+    }
+
+    public void Unpause()
+    {
+        paused = false;
+        vfxManager.blurringNow = false;
     }
 
     // -= Extra functions =-

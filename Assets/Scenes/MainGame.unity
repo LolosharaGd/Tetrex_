@@ -409,6 +409,7 @@ MonoBehaviour:
   linesForTrashToken: 5
   lost: 0
   won: 0
+  paused: 0
   debugRenderBoard: 0
 --- !u!4 &90199166
 Transform:
@@ -507,7 +508,12 @@ MonoBehaviour:
   blurredCamera: {fileID: 1554137848}
   gameBlurredMaterial: {fileID: 2100000, guid: 43a9286a26a0ef24ba33ee91337d503f, type: 2}
   gameBlurredQuad: {fileID: 903606050}
+  blurSpeed: 10
+  maxBlur: 0.0011
+  blurProgress: 0
+  blurringNow: 0
   cam: {fileID: 0}
+  controller: {fileID: 90199165}
   shopController: {fileID: 0}
   transitionBgMaterial: {fileID: 2100000, guid: a58aba33901b83744b2032ab4ca37f61, type: 2}
   newBgColor: {r: 0.09803922, g: 0.09803922, b: 0.09803922, a: 0}

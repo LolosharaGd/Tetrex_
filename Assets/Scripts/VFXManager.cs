@@ -16,7 +16,14 @@ public class VFXManager : MonoBehaviour
     public Camera blurredCamera;
     public Material gameBlurredMaterial;
     public GameObject gameBlurredQuad;
+    public float blurSpeed;
+    [SerializeField] float maxBlur;
+    [SerializeField] float blurProgress;
+    public bool blurringNow;
+    float blurTimer;
+
     [SerializeField] Camera cam;
+    [SerializeField] GameController controller;
     [SerializeField] ShopController shopController;
 
     // Camera background color
@@ -85,6 +92,12 @@ public class VFXManager : MonoBehaviour
 
     void InGameUpdate()
     {
+        // Blur
+        blurTimer = Mathf.Clamp(blurTimer + Time.deltaTime * (blurringNow ? 1f : -1f) * blurSpeed, 0f, 1f);
+        blurProgress = 1f - Mathf.Pow(blurTimer - 1f, 4);
+        gameBlurredMaterial.SetFloat("_Step_Size", blurProgress * maxBlur);
+        // Text transparecy later in function
+
         // Properly resize the blurred quad
         Vector3 newGBQSize = new Vector3(blurredCamera.orthographicSize * 2f * blurredCamera.aspect, blurredCamera.orthographicSize * 2f, 1f);
         gameBlurredQuad.transform.localScale = newGBQSize;
@@ -113,10 +126,10 @@ public class VFXManager : MonoBehaviour
 
         float transitionProgress = IGTransitionProgress;
 
-        // Set all text transparency
+        // Set all text transparency (including blur)
         foreach (var text in gameText)
         {
-            text.color = new Color(text.color.r, text.color.g, text.color.b, Mathf.Min(1f - transitionProgress * 5f, 1f));
+            text.color = new Color(text.color.r, text.color.g, text.color.b, Mathf.Min(Mathf.Min(1f - transitionProgress * 5f, 1f), 1f - blurProgress));
         }
 
         // Apply transition transformations
