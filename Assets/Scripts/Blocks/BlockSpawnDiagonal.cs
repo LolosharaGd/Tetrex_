@@ -12,7 +12,7 @@ namespace Tetrex.Blocks
             Vector2Int myPos = GetPosInGrid(blockGrid);
             BlockAction[] actions = new BlockAction[myPos.y * 2 + 2];
 
-            actions[0] = PackageBlockRemoval(this);
+            actions[0] = PackageBlockRemoval(this, true);
             actions[myPos.y * 2 + 1] = PackageBlockSpawn(0, myPos);
 
             for (int i = 1; i <= myPos.y; i++)

@@ -57,7 +57,7 @@ namespace Tetrex.Blocks
 
             BlockAction[] actions = new BlockAction[emptySpotsAmount + 2];
 
-            actions[0] = PackageBlockRemoval(this);
+            actions[0] = PackageBlockRemoval(this, true);
             actions[1] = PackageBlockSpawn(0, myPos);
             for (int i = 0; i < emptySpotsAmount; i++) actions[i + 2] = PackageBlockSpawn(0, emptySpots[esIndices[i]]);
 

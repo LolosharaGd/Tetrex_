@@ -89,6 +89,14 @@ MonoBehaviour:
     block: {fileID: 440199156720638517, guid: 4850b9589ec997c4cb99bc40affe6c7d, type: 3}
     previewBlock: {fileID: 9082082322137569350, guid: 6b52c3a9c914c2043aad49be2299f03c, type: 3}
     rarity: 0
+  - name: EProtected Row
+    block: {fileID: 440199156720638517, guid: 2ece820be90e1b5428f4903e5ea5880b, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: b49975d38ec61bb49a73e971c5dad4a0, type: 3}
+    rarity: 1
+  - name: EProtected Square
+    block: {fileID: 440199156720638517, guid: 09a5e3e47f4b255409213dbfe00c7460, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: 10f2a0e3f5c3782419a11d190ec6ac5b, type: 3}
+    rarity: 1
   blockEffectPrefabs:
   - {fileID: 0}
   - {fileID: 2543644913401312571, guid: ac0b3c6dc8b6cd049a45613feb7a0d21, type: 3}
@@ -598,6 +606,32 @@ MonoBehaviour:
     blockActivatesOnUserInput: 0
     blockSelfDestructs: 0
     saveBitIndex: 18
+  - name: EProtected Row
+    description: Protects every block on its row
+    notes: NO NOTE HERE
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: 0c575fe1c0662484ca9ac03bb8c952da, type: 3}
+    cost: 3
+    rarity: 1
+    alignment: 1
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 0
+    saveBitIndex: 19
+  - name: EProtected Square
+    description: Protects itself and 8 adjacent blocks
+    notes: NO NOTE HERE
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: 259389f4a3ce26d42a240667c04d6923, type: 3}
+    cost: 3
+    rarity: 1
+    alignment: 1
+    blockActivatesOnLanding: 1
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 0
+    saveBitIndex: 20
   scrollBlockSpacing: 1.25
   centralScrollBlockAddedSpacing: 0.25
   normalBlockSize: 1

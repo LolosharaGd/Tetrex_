@@ -57,7 +57,7 @@ namespace Tetrex.Blocks
                 curRow++;
             } while (blocksToFill > 0);
 
-            actions[5] = PackageBlockRemoval(myPos);
+            actions[5] = PackageBlockRemoval(myPos, true);
             actions[6] = PackageBlockSpawn(0, myPos);
 
             return actions;

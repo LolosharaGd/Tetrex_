@@ -17,7 +17,7 @@ namespace Tetrex.Blocks
                 actions[x - myPos.x + 1] = PackageBlockSpawn(0, new Vector2Int(x, myPos.y));
             }
 
-            actions[0] = PackageBlockRemoval(this);
+            actions[0] = PackageBlockRemoval(this, true);
 
             return actions;
         }

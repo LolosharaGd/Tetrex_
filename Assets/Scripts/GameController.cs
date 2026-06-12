@@ -848,7 +848,7 @@ public class GameController : MonoBehaviour
         }
 
         // Get world position
-        Vector3 blockPos = GridToWorldCoords(position) + Vector3.up;
+        Vector3 blockPos = GridToWorldCoords(position);
 
         // Spawn GO
         GameObject spawnedBlock = Instantiate(targetBlock, blockPos, targetBlock.transform.rotation, blocksParent);
@@ -1102,8 +1102,8 @@ public class GameController : MonoBehaviour
         {
             if (action.type == BlockActionType.REMOVEBLOCK)
             {
-                if (action.block != null) RemoveBlock(action.block);
-                else RemoveBlock(action.position);
+                if (action.block != null) RemoveBlock(action.block, (bool)action.extra);
+                else RemoveBlock(action.position, (bool)action.extra);
             }
         }
         // Do all block spawns
@@ -1172,7 +1172,7 @@ public class GameController : MonoBehaviour
         // Move all controlled blocks to held shape preview and update TTs
         for (int i = 0; i < controlledBlocks.Count; i++)
         {
-            Vector3 newBlockPos = GridToWorldCoords(heldShapePreviewStartingPosition + currentShape.startingPosition + currentShape.positions[i]) + Vector3.up;
+            Vector3 newBlockPos = GridToWorldCoords(heldShapePreviewStartingPosition + currentShape.startingPosition + currentShape.positions[i]);
             controlledBlocks[i].transform.position = newBlockPos;
             controlledBlocks[i].transitionTransformation.startPosition = newBlockPos;
         }
@@ -1255,8 +1255,8 @@ public class GameController : MonoBehaviour
             for (int i = 0; i < controlledBlocks.Count; i++)
             {
                 Vector2Int blockPos = shapeStartingPosition + currentShape.positions[i] + currentShape.startingPosition;
-                controlledBlocks[i].transform.position = GridToWorldCoords(blockPos) + Vector3.up;
-                controlledBlocks[i].transitionTransformation.startPosition = GridToWorldCoords(blockPos) + Vector3.up;
+                controlledBlocks[i].transform.position = GridToWorldCoords(blockPos);
+                controlledBlocks[i].transitionTransformation.startPosition = GridToWorldCoords(blockPos);
 
                 // Also add the block to grid
                 blockGrid[blockPos.x, blockPos.y] = controlledBlocks[i];

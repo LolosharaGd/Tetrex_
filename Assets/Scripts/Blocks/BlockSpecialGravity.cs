@@ -25,7 +25,7 @@ namespace Tetrex.Blocks
                     if (blockGrid[x, y])
                     {
                         columns[x].Add(blockGrid[x, y].gameObject);
-                        actions.Add(PackageBlockRemoval(new Vector2Int(x, y)));
+                        actions.Add(PackageBlockRemoval(new Vector2Int(x, y), true));
                     }
                 }
             }

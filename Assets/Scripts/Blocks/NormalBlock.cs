@@ -52,11 +52,12 @@ namespace Tetrex.Blocks
         /// Packages removing a block into a BlockAction. Actions inside one action type are done in order they were queued. Order of types: RemoveEffect -> PlaceEffect -> RemoveBlock -> PlaceBlock -> Stop -> ClearRow
         /// </summary>
         /// <param name="targetBlock">NormalBlock block object of block being removed. Vector2Int position of the block being removed.</param>
-        public BlockAction PackageBlockRemoval(object targetBlock)
+        public BlockAction PackageBlockRemoval(object targetBlock, bool ignoreBE = false)
         {
             return new BlockAction
             {
                 block = targetBlock,
+                extra = ignoreBE,
                 type = BlockActionType.REMOVEBLOCK
             };
         }

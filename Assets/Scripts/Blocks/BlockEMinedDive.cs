@@ -13,7 +13,7 @@ namespace Tetrex.Blocks
 
             BlockAction[] actions = new BlockAction[myPos.y + 2];
 
-            actions[myPos.y + 1] = PackageBlockRemoval(this);
+            actions[myPos.y + 1] = PackageBlockRemoval(this, true);
 
             for (int y = myPos.y; y >= 0; y--)
             {
