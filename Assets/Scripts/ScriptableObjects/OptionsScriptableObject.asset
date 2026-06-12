@@ -617,7 +617,7 @@ MonoBehaviour:
     blockActivatesOnLanding: 1
     blockActivatesOnClearRow: 1
     blockActivatesOnUserInput: 0
-    blockSelfDestructs: 0
+    blockSelfDestructs: 1
     saveBitIndex: 19
   - name: EProtected Square
     description: Protects itself and 8 adjacent blocks
@@ -630,7 +630,7 @@ MonoBehaviour:
     blockActivatesOnLanding: 1
     blockActivatesOnClearRow: 1
     blockActivatesOnUserInput: 0
-    blockSelfDestructs: 0
+    blockSelfDestructs: 1
     saveBitIndex: 20
   scrollBlockSpacing: 1.25
   centralScrollBlockAddedSpacing: 0.25

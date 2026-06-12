@@ -209,6 +209,19 @@ public class GameController : MonoBehaviour
     // Debug
     [SerializeField] bool debugRenderBoard;
 
+    bool AnyActionsQueued
+    {
+        get
+        {
+            return queuedActionsRemoveEffect.Count > 0 ||
+                    queuedActionsPlaceEffect.Count > 0 ||
+                    queuedActionsRemoveBlock.Count > 0 ||
+                     queuedActionsSpawnBlock.Count > 0 ||
+                       queuedActionsClearrow.Count > 0 ||
+                                  stopActionQueued;
+        }
+    }
+
     void Start()
     {
         blockFallTimer = 1 / prop.blockFallSpeed;
@@ -566,7 +579,7 @@ public class GameController : MonoBehaviour
         controlledBlocks.Clear();
 
         // Do actions that may have been queued by activated blocks
-        DoQueuedBlockActions();
+        //DoQueuedBlockActions();
 
         // Check if there are any blocks in the top 4 rows
         for (int x = 0; x < blockGrid.GetLength(0); x++) for (int y = 20; y < blockGrid.GetLength(1); y++) if (blockGrid[x, y] != null) Lose();
@@ -580,8 +593,17 @@ public class GameController : MonoBehaviour
             if (rowIsFull) fullRows.Add(y);
         }
 
-        // Clear full rows
-        foreach (var fullRow in fullRows) ClearRow(fullRow);
+        // UNSTABLE! MAY CAUSE BUGS BUT IDFC! Activate block on rows to clear
+        //foreach (var fullRow in fullRows)
+        //{
+        //    for (int x = 0; x < blockGrid.GetLength(0); x++) if (blockGrid[x, fullRow] != null) if (blockGrid[x, fullRow].activateOnClearRow) ActivateBlock(blockGrid[x, fullRow]);
+        //}
+
+        // Queue actual row clearing
+        foreach (var fullRow in fullRows) QueueRowClear(fullRow);
+
+        // Do actions
+        DoQueuedBlockActions();
 
         // Play the row clear sound
         soundController.PlayRowClearSound((int)MathF.Min(extraClearedLines, 5));
@@ -965,7 +987,7 @@ public class GameController : MonoBehaviour
             // Activate all blocks on that row that are activated 
             for (int x = 0; x < blockGrid.GetLength(0); x++) if (blockGrid[x, y] != null) if (blockGrid[x, y].activateOnClearRow) ActivateBlock(blockGrid[x, y]);
 
-            DoQueuedBlockActions();
+            //DoQueuedBlockActions();
 
             bool rowWillGivePoints = true;
 
@@ -1009,7 +1031,6 @@ public class GameController : MonoBehaviour
 
     // -= Block Actions =-
 
-    // UNUSED \/
     /// <summary>
     /// Universal function to queue a block remove action. Actions are done in order they were queued. But block removes are done after row clears
     /// </summary>
@@ -1060,7 +1081,6 @@ public class GameController : MonoBehaviour
     {
         stopActionQueued = true;
     }
-    // UNUSED /\
 
     public void DoQueuedBlockActions()
     {
@@ -1128,6 +1148,8 @@ public class GameController : MonoBehaviour
         }
 
         UpdateDashPreview();
+
+        if (AnyActionsQueued) DoQueuedBlockActions();
     }
 
     public void ActivateBlock(NormalBlock block)
