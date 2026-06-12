@@ -593,12 +593,6 @@ public class GameController : MonoBehaviour
             if (rowIsFull) fullRows.Add(y);
         }
 
-        // UNSTABLE! MAY CAUSE BUGS BUT IDFC! Activate block on rows to clear
-        //foreach (var fullRow in fullRows)
-        //{
-        //    for (int x = 0; x < blockGrid.GetLength(0); x++) if (blockGrid[x, fullRow] != null) if (blockGrid[x, fullRow].activateOnClearRow) ActivateBlock(blockGrid[x, fullRow]);
-        //}
-
         // Queue actual row clearing
         foreach (var fullRow in fullRows) QueueRowClear(fullRow);
 
@@ -1148,6 +1142,18 @@ public class GameController : MonoBehaviour
         }
 
         UpdateDashPreview();
+
+        // Check if any rows are full
+        List<int> fullRows = new();
+        for (int y = blockGrid.GetLength(1) - 5; y >= 0; y--)
+        {
+            bool rowIsFull = true;
+            for (int x = 0; x < blockGrid.GetLength(0); x++) rowIsFull = rowIsFull && (blockGrid[x, y] != null);
+            if (rowIsFull) fullRows.Add(y);
+        }
+
+        // Queue actual row clearing
+        foreach (var fullRow in fullRows) QueueRowClear(fullRow);
 
         if (AnyActionsQueued) DoQueuedBlockActions();
     }

@@ -61,6 +61,19 @@ public class VFXManager : MonoBehaviour
 
     public float endAnimSpeed;
 
+    public int curLevel;
+    [SerializeField] List<Transform> ppbPoints = new();
+    [SerializeField] List<SpriteRenderer> ppbSprites = new();
+    [SerializeField] List<LineRenderer> ppbLines = new();
+
+    [SerializeField] Sprite normalStageSprite;
+    [SerializeField] Sprite completedStageSprite;
+    [SerializeField] Sprite normalLevelSprite;
+    [SerializeField] Sprite currentLevelSprite;
+    [SerializeField] Sprite completedLevelSprite;
+    [SerializeField] Sprite bossLevelSprite;
+    [SerializeField] Sprite currentBossLevelSprite;
+
     float prevTransitionProgress;
 
     public VFXMode mode;
@@ -97,6 +110,7 @@ public class VFXManager : MonoBehaviour
         blurProgress = 1f - Mathf.Pow(blurTimer - 1f, 4);
         gameBlurredMaterial.SetFloat("_Step_Size", blurProgress * maxBlur);
         // Text transparecy later in function
+        PauseMenuUpdate();
 
         // Properly resize the blurred quad
         Vector3 newGBQSize = new Vector3(blurredCamera.orthographicSize * 2f * blurredCamera.aspect, blurredCamera.orthographicSize * 2f, 1f);
@@ -176,6 +190,95 @@ public class VFXManager : MonoBehaviour
         shakePower = Mathf.Max(shakePower, 0f);
 
         prevTransitionProgress = transitionProgress;
+    }
+
+    void PauseMenuUpdate()
+    {
+        float normalKerning = 0.7f;
+        float instageKerning = 0.5f;
+        float totalWidth = normalKerning * 6 + instageKerning;
+        float vertOffs = 0.25f;
+
+        float transitionOffset = 1f;
+
+        float accumulatedKerning = 0f;
+
+        for (int i = 0; i < 9; i++)
+        {
+            // Points
+            ppbSprites[i].color = new Color(ppbSprites[i].color.r, ppbSprites[i].color.g, ppbSprites[i].color.b, Mathf.Min(1f, blurProgress * 2f));
+
+            Vector3 offs = Vector3.zero;
+
+            // If this point is a completed stage
+            if (i + 1 < LevelToStage(curLevel))
+            {
+                offs = new Vector3(totalWidth / -2f + accumulatedKerning, 0f, 0f);
+                accumulatedKerning += normalKerning;
+            }
+            // If this point is in current stage
+            else if (i + 1 < LevelToStage(curLevel) + 3)
+            {
+                if (i + 1 == LevelToStage(curLevel)) offs = new Vector3(totalWidth / -2f + accumulatedKerning, vertOffs, 0f); // First
+                if (i + 1 == LevelToStage(curLevel) + 1) { offs = new Vector3(totalWidth / -2f + accumulatedKerning, -vertOffs, 0f); accumulatedKerning += instageKerning; } // Second
+                if (i + 1 == LevelToStage(curLevel) + 2) { offs = new Vector3(totalWidth / -2f + accumulatedKerning, 0f, 0f); accumulatedKerning += normalKerning; } // Boss
+            }
+            // If this point is an upcoming stage
+            else
+            {
+                offs = new Vector3(totalWidth / -2f + accumulatedKerning, 0f, 0f);
+                accumulatedKerning += normalKerning;
+            }
+
+            offs.z -= cam.transform.position.z;
+
+            float angle = (Time.time * 2.3f * (1f + i / 9f)) + Mathf.Pow(i, 3f) * 1.4f;
+            offs += new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * Mathf.Max(1f - blurProgress, 0.01f);
+
+            ppbPoints[i].position = cam.transform.position + offs;
+
+            // Lines
+            if (i != 8)
+            {
+                ppbLines[i].startWidth = 0.18181818f * Mathf.Max(0f, blurProgress * 2f - 1f);
+                ppbLines[i].SetPositions(new Vector3[] { ppbPoints[i].position + Vector3.forward, ppbPoints[i + 1].position + Vector3.forward });
+            }
+        }
+    }
+
+    public void UpdatePPBPointsTextures()
+    {
+        for (int i = 0; i < 9; i++)
+        {
+            // If this point is a completed stage
+            if (i + 1 < LevelToStage(curLevel))
+            {
+                ppbSprites[i].sprite = completedStageSprite;
+            }
+            // If this point is in current stage
+            else if (i + 1 < LevelToStage(curLevel) + 3)
+            {
+                if (i + 1 == LevelToStage(curLevel)) // First
+                {
+                    ppbSprites[i].sprite = LevelToLevelInStage(curLevel) == 1 ? currentLevelSprite : completedLevelSprite;
+                }
+                if (i + 1 == LevelToStage(curLevel) + 1) // Second
+                {
+                    if      (LevelToLevelInStage(curLevel) == 1) ppbSprites[i].sprite = normalLevelSprite;
+                    else if (LevelToLevelInStage(curLevel) == 2) ppbSprites[i].sprite = currentLevelSprite;
+                    else                                         ppbSprites[i].sprite = completedLevelSprite;
+                }
+                if (i + 1 == LevelToStage(curLevel) + 2) // Boss
+                {
+                    ppbSprites[i].sprite = LevelToLevelInStage(curLevel) == 3 ? currentBossLevelSprite : bossLevelSprite;
+                }
+            }
+            // If this point is an upcoming stage
+            else
+            {
+                ppbSprites[i].sprite = normalStageSprite;
+            }
+        }
     }
 
     void InShopUpdate()
@@ -260,5 +363,15 @@ public class VFXManager : MonoBehaviour
     float Rand(float x, float y)
     {
         return UnityEngine.Random.Range(x, y);
+    }
+
+    public int LevelToStage(int level)
+    {
+        return ((level - 1) / 3) + 1;
+    }
+
+    public int LevelToLevelInStage(int level)
+    {
+        return level - (LevelToStage(level) - 1) * 3;
     }
 }

@@ -103,6 +103,9 @@ public class SaveManager : MonoBehaviour
         }
 
         controller.currentTrashTokens = PlayerPrefs.GetInt("trashTokens");
+
+        vfxManager.curLevel = level;
+        vfxManager.UpdatePPBPointsTextures();
     }
 
     public void RoundEnd()

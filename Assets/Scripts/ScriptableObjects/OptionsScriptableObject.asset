@@ -97,6 +97,10 @@ MonoBehaviour:
     block: {fileID: 440199156720638517, guid: 09a5e3e47f4b255409213dbfe00c7460, type: 3}
     previewBlock: {fileID: 9082082322137569350, guid: 10f2a0e3f5c3782419a11d190ec6ac5b, type: 3}
     rarity: 1
+  - name: Row Clear Chain
+    block: {fileID: 440199156720638517, guid: c03442ec22cf8d542a077c80c7659ac3, type: 3}
+    previewBlock: {fileID: 9082082322137569350, guid: 2b2142d7bcf57844abedeb31e7c1ac1b, type: 3}
+    rarity: 2
   blockEffectPrefabs:
   - {fileID: 0}
   - {fileID: 2543644913401312571, guid: ac0b3c6dc8b6cd049a45613feb7a0d21, type: 3}
@@ -632,6 +636,19 @@ MonoBehaviour:
     blockActivatesOnUserInput: 0
     blockSelfDestructs: 1
     saveBitIndex: 20
+  - name: Row Clear Chain
+    description: Clears the row below itself
+    notes: NO NOTE HERE
+    isEquipped: 0
+    spritePrefab: {fileID: 9082082322137569350, guid: cff2a32bfb036f24da45ada92334ab6d, type: 3}
+    cost: 3
+    rarity: 1
+    alignment: 1
+    blockActivatesOnLanding: 0
+    blockActivatesOnClearRow: 1
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 1
+    saveBitIndex: 21
   scrollBlockSpacing: 1.25
   centralScrollBlockAddedSpacing: 0.25
   normalBlockSize: 1

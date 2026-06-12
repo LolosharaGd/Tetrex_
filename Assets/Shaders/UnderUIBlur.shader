@@ -55,7 +55,9 @@ Shader "Unlit/UnderUIBlur"
                 {
                     for (int y = (_Y_Resolution - 1) / -2; y <= (_Y_Resolution - 1) / 2; ++y)
                     {
-                        float weight = 1 / (abs(x / (_X_Resolution / 4 - 0.25)) + abs(y / (_Y_Resolution / 4 - 0.25)) + 1);
+                        //float weight = 1 / (abs(x / (_X_Resolution / 4 - 0.25)) + abs(y / (_Y_Resolution / 4 - 0.25)) + 1);
+                        //float weight = 1;
+                        float weight = pow(2.71828, -((pow(x, 2) + pow(y, 2)) / (2 * pow(max(_X_Resolution, _Y_Resolution), 2))));
                         col += tex2D(_MainTex, i.uv + float2(x * _Step_Size, y * _Step_Size)) * weight;
                         total_weight += weight;
                     }
