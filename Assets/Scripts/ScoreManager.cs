@@ -34,6 +34,7 @@ public class ScoreManager : MonoBehaviour
     /// TMPro component where to write the combo
     /// </summary>
     public TextMeshProUGUI comboText;
+    public GameObject comboMB;
 
     /// <summary>
     /// Combo of how many block lands in a row have coused at least one row clear. Added score is scaled according to the combo
@@ -181,6 +182,7 @@ public class ScoreManager : MonoBehaviour
         {
             comboLabel.SetActive(true);
             comboText.gameObject.SetActive(true);
+            comboMB.SetActive(true);
 
             comboText.text = "X" + combo;
         }
@@ -188,6 +190,7 @@ public class ScoreManager : MonoBehaviour
         {
             comboLabel.SetActive(false);
             comboText.gameObject.SetActive(false);
+            comboMB.SetActive(false);
         }
     }
 

@@ -11,8 +11,13 @@ public enum VFXMode { INGAME, SHOP }
 //[ExecuteAlways]
 public class VFXManager : MonoBehaviour
 {
+    [Header("-== References ==-")]
     public PropertiesScriptableObject prop;
+    [SerializeField] Camera cam;
+    [SerializeField] GameController controller;
+    [SerializeField] ShopController shopController;
 
+    [Header("-== Pause Blur ==-")]
     public Camera blurredCamera;
     public Material gameBlurredMaterial;
     public GameObject gameBlurredQuad;
@@ -22,15 +27,11 @@ public class VFXManager : MonoBehaviour
     public bool blurringNow;
     float blurTimer;
 
-    [SerializeField] Camera cam;
-    [SerializeField] GameController controller;
-    [SerializeField] ShopController shopController;
-
-    // Camera background color
+    [Header("-== Main BG ==-")]
     public Material transitionBgMaterial;
     public Color newBgColor;
 
-    // Camera shake
+    [Header("-== Camera Shake ==-")]
     /// <summary>
     /// Position changes per second
     /// </summary>
@@ -38,19 +39,24 @@ public class VFXManager : MonoBehaviour
     public float shakeTimer;
     public float shakePower;
     public float shakeFade;
+    Vector3 shakeOffset;
 
     public float IGTransitionProgress
     {
         get => transitionBgMaterial.GetFloat("_Transition_Progress");
     }
 
-    // Shop BG
+    [Header("-== Shop BG ==-")]
     public Material shopBgMaterial;
     public Vector3 shopBgCircle;
     public bool shopEndingAnimation;
     public bool roundEndingAnimation;
+
+    [Header("-== Text ==-")]
     public TextMeshPro[] shopText;
     public TextMeshProUGUI[] gameText;
+
+    [Header("-== Transition Transformations ==-")]
     public TransitionTransformation[] shopTTs;
     public TransitionTransformation[] gameTTs;
     public List<TransitionTransformation> gameBlockTTs = new();
@@ -59,8 +65,7 @@ public class VFXManager : MonoBehaviour
     /// </summary>
     public TransitionTransformation[,] beTTtGrid = new TransitionTransformation[10, 24];
 
-    public float endAnimSpeed;
-
+    [Header("-== Pause Menu ==-")]
     public int curLevel;
     [SerializeField] List<Transform> ppbPoints = new();
     [SerializeField] List<SpriteRenderer> ppbSprites = new();
@@ -74,7 +79,10 @@ public class VFXManager : MonoBehaviour
     [SerializeField] Sprite bossLevelSprite;
     [SerializeField] Sprite currentBossLevelSprite;
 
+    [Header("-== Other ==-")]
     float prevTransitionProgress;
+
+    public float endAnimSpeed;
 
     public VFXMode mode;
 
@@ -129,12 +137,14 @@ public class VFXManager : MonoBehaviour
         ));
 
         // Camera shake
+        Vector2 camshakeOffset = UnityEngine.Random.insideUnitCircle * shakePower;
+        Vector3 csoV3 = new Vector3(camshakeOffset.x, camshakeOffset.y, 0f);
         if (shakeTimer <= 0f)
         {
             shakeTimer = 1 / shakeSpeed;
 
-            Vector2 randomPos = UnityEngine.Random.insideUnitCircle * shakePower;
-            Vector3 camNewPos = new Vector3(randomPos.x, randomPos.y, -10f);
+            shakeOffset = csoV3;
+            Vector3 camNewPos = new Vector3(camshakeOffset.x, camshakeOffset.y, -10f);
             blurredCamera.transform.position = camNewPos;
         }
 
@@ -147,10 +157,10 @@ public class VFXManager : MonoBehaviour
         }
 
         // Apply transition transformations
-        float transitionScaling = transitionProgress >= 0.95f ? 10000f : Mathf.Pow(Mathf.Tan(transitionProgress * Mathf.PI / 2f), 3f);
+        float transitionScaling = Mathf.Min(transitionProgress >= 0.95f ? 25f : Mathf.Pow(Mathf.Tan(transitionProgress * Mathf.PI / 2f), 3f), 25f);
         foreach (var transformation in gameTTs)
         {
-            transformation.gameObject.transform.position = transformation.startPosition + transformation.direction * transitionScaling;
+            transformation.gameObject.transform.position = transformation.startPosition + transformation.direction * transitionScaling + (transformation.applyAntishake ? -shakeOffset : Vector3.zero);
         }
 
         // Apply transition transformations on blocks if transition is happening

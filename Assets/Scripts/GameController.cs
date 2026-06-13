@@ -581,9 +581,6 @@ public class GameController : MonoBehaviour
         // Do actions that may have been queued by activated blocks
         //DoQueuedBlockActions();
 
-        // Check if there are any blocks in the top 4 rows
-        for (int x = 0; x < blockGrid.GetLength(0); x++) for (int y = 20; y < blockGrid.GetLength(1); y++) if (blockGrid[x, y] != null) Lose();
-
         // Check if any rows are full
         List<int> fullRows = new();
         for (int y = blockGrid.GetLength(1) - 5; y >= 0; y--)
@@ -605,6 +602,9 @@ public class GameController : MonoBehaviour
         // Add score
         scoreManager.AddScoreFromLines(extraClearedLines + (extraClearedLines == 0 ? 0 : LineClearBonus));
         extraClearedLines = 0;
+
+        // Check if there are any blocks in the top 4 rows
+        for (int x = 0; x < blockGrid.GetLength(0); x++) for (int y = 20; y < blockGrid.GetLength(1); y++) if (blockGrid[x, y] != null) Lose();
 
         // Check the win condition
         won = scoreManager.CheckWinCondition();

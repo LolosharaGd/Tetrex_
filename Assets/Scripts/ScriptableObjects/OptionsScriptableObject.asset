@@ -655,8 +655,8 @@ MonoBehaviour:
   centralBlockSize: 1.5
   scrollBlockSwitchDuration: 0.075
   blockScrollSwitchDuration: 0.1
-  minColor: {r: 0.099, g: 0.09405, b: 0.09405, a: 0}
-  maxColor: {r: 0.199, g: 0.184075, b: 0.16915, a: 0}
+  minColor: {r: 0.35, g: 0.06999999, b: 0.06999999, a: 0}
+  maxColor: {r: 0.55, g: 0, b: 0.010784412, a: 0}
   colorChangeSpeed: 0.005
   blockMoveSound:
     name: Move

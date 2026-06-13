@@ -210,6 +210,7 @@ namespace Tetrex.DataStructures
         public GameObject gameObject;
         public Vector3 direction;
         public Vector3 startPosition;
+        public bool applyAntishake = false;
     }
 
     [System.Serializable]
