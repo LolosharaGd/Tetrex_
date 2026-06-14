@@ -128,7 +128,7 @@ public class SaveManager : MonoBehaviour
     public void RoundEnd()
     {
         // Calculate and give money
-        int moneyGain = Mathf.FloorToInt(Mathf.Log(scoreManager.score / 1000, 2f)) + 1;
+        int moneyGain = 1 + Mathf.Max(0, 1 + Mathf.FloorToInt(Mathf.Log((scoreManager.score - scoreManager.scoreGoal) / 1000, 2f)));
         print("Score: " + scoreManager.score + "; Money gained: " + moneyGain + "; Previous money: " + PlayerPrefs.GetInt("money") + "; New money: " + (PlayerPrefs.GetInt("money") + moneyGain));
         PlayerPrefs.SetInt("money", PlayerPrefs.GetInt("money") + moneyGain);
 
