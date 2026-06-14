@@ -105,8 +105,6 @@ public class SaveManager : MonoBehaviour
             soundController.PlayStageMusic(LevelToStage(level));
         }
 
-        controller.currentTrashTokens = PlayerPrefs.GetInt("trashTokens");
-
         List<int> loadedPermInts = new();
         int savedPermIntsCount = PlayerPrefs.GetInt("SavedPermInts");
         for (int i = 0; i < savedPermIntsCount; i++) // Load
@@ -120,6 +118,8 @@ public class SaveManager : MonoBehaviour
                 controller.perms[intIndex * 4 + byteIndex] = (loadedPermInts[intIndex] >> (byteIndex * 8)) & 0b11111111;
             }
         }
+
+        controller.currentTrashTokens = prop.startTrashTokens + controller.perms[(int)Perm.TrashToken];
 
         vfxManager.curLevel = level;
         vfxManager.UpdatePPBPointsTextures();
@@ -292,19 +292,20 @@ public class SaveManager : MonoBehaviour
         // Delete prev run info
         for (int i = 0; i < 128; i++)
         {
-            PlayerPrefs.DeleteKey("EquippedInventory" + i);
             // I'm sure if I release this someone will find a way to equip 513 blocks and get a few permanently saved ones but this will do for now
+            PlayerPrefs.DeleteKey("EquippedInventory" + i);
             PlayerPrefs.DeleteKey("EquippedBlocks" + i);
+            PlayerPrefs.DeleteKey("BoughtPerm" + i);
         }
 
         PlayerPrefs.DeleteKey("SavedInventoryInts");
+        PlayerPrefs.DeleteKey("SavedPermInts");
 
         // Set starting stats
         PlayerPrefs.SetInt("money", prop.startMoney);
         PlayerPrefs.SetInt("level", 1);
         PlayerPrefs.SetInt("sellTokens", prop.startSellTokens);
         PlayerPrefs.SetInt("shopSlots", prop.startShopSlots);
-        PlayerPrefs.SetInt("trashTokens", prop.startTrashTokens);
 
         // Reset materials
         shopBgMaterial.SetFloat("_Transition_Progress", 1f);

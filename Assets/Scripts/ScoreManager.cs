@@ -37,7 +37,7 @@ public class ScoreManager : MonoBehaviour
     public GameObject comboMB;
 
     /// <summary>
-    /// Combo of how many block lands in a row have coused at least one row clear. Added score is scaled according to the combo
+    /// Combo of how many block lands in a row have caused at least one row clear. Added score is scaled according to the combo
     /// </summary>
     public int combo;
 

@@ -86,11 +86,15 @@ public class PropertiesScriptableObject : ScriptableObject
     /// <summary>
     /// Minimum HSV of the bg color
     /// </summary>
-    public Color minColor;
+    public Color minSatAndVal;
     /// <summary>
     /// Maximum HSV of the bg color
     /// </summary>
-    public Color maxColor;
+    public Color maxSatAndVal;
+    /// <summary>
+    /// X = min, Y = max. Range for random hue change. Index is the amount of rows.
+    /// </summary>
+    public Vector2[] hueShiftRanges;
     /// <summary>
     /// Speed of bg color change
     /// </summary>

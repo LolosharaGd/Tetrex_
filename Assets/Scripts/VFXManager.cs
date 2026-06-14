@@ -30,6 +30,7 @@ public class VFXManager : MonoBehaviour
     [Header("-== Main BG ==-")]
     public Material transitionBgMaterial;
     public Color newBgColor;
+    [SerializeField] float bgHue;
 
     [Header("-== Camera Shake ==-")]
     /// <summary>
@@ -92,7 +93,7 @@ public class VFXManager : MonoBehaviour
 
         if (mode == VFXMode.INGAME)
         {
-            ChangeBgColor();
+            ChangeBgColor(-1);
             InGameUpdate();
         } else if (mode == VFXMode.SHOP)
         {
@@ -207,9 +208,9 @@ public class VFXManager : MonoBehaviour
         float normalKerning = 0.7f;
         float instageKerning = 0.5f;
         float totalWidth = normalKerning * 6 + instageKerning;
-        float vertOffs = 0.25f;
+        float vertOffs = 0.3f;
 
-        float transitionOffset = 1f;
+        float transitionOffset = 0.4f;
 
         float accumulatedKerning = 0f;
 
@@ -243,9 +244,10 @@ public class VFXManager : MonoBehaviour
             offs.z -= cam.transform.position.z;
 
             float angle = (Time.time * 2.3f * (1f + i / 9f)) + Mathf.Pow(i, 3f) * 1.4f;
-            offs += new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * Mathf.Max(1f - blurProgress, 0.01f);
+            offs += new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * Mathf.Max(1f - blurProgress, 0.01f) * transitionOffset;
 
             ppbPoints[i].position = cam.transform.position + offs;
+            ppbPoints[i].rotation = Quaternion.Euler(0f, 0f, Mathf.Sin(angle * 3f) * Mathf.Lerp(3f, 200f, blurProgress) * Mathf.Max(1f - blurProgress, 0.01f));
 
             // Lines
             if (i != 8)
@@ -349,17 +351,21 @@ public class VFXManager : MonoBehaviour
         shakePower = Mathf.Max(shakePower, 0f);
     }
 
-    public void ChangeBgColor()
+    public void ChangeBgColor(int power)
     {
-        float minHue, minSaturation, minValue;
-        float maxHue, maxSaturation, maxValue;
+        float minSaturation, minValue;
+        float maxSaturation, maxValue;
 
-        Color.RGBToHSV(prop.minColor, out minHue, out minSaturation, out minValue);
-        Color.RGBToHSV(prop.maxColor, out maxHue, out maxSaturation, out maxValue);
+        Color.RGBToHSV(prop.minSatAndVal, out _, out minSaturation, out minValue);
+        Color.RGBToHSV(prop.maxSatAndVal, out _, out maxSaturation, out maxValue);
 
-        float newHue = Rand(minHue - (minHue > maxHue ? 1 : 0), maxHue);
+        if (power == -1) bgHue = Rand(0f, 360f);
+        else
+        {
+            bgHue += Rand(prop.hueShiftRanges[Mathf.Min(5, power)].x, prop.hueShiftRanges[Mathf.Min(5, power)].y) * (Rand(0f, 1f) <= 0.5f ? 1f : -1f);
+        }
 
-        newBgColor = Color.HSVToRGB(newHue, Rand(minSaturation, maxSaturation), Rand(minValue, maxValue));
+        newBgColor = Color.HSVToRGB(bgHue % 360f / 360f, Rand(minSaturation, maxSaturation), Rand(minValue, maxValue));
     }
 
     public void CameraShake(float power, float time, float speed = 0f)

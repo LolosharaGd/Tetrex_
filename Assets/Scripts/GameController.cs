@@ -236,6 +236,11 @@ public class GameController : MonoBehaviour
         }
         SpawnRandomShape(shapeStartingPosition);
         UpdateNextShapePreview();
+
+        // Update trash tokens text
+        string ttText = Mathf.Clamp(currentTrashTokens, 0, 99999) + "";
+        for (int i = ttText.Length; i < 5; i++) ttText = "0" + ttText;
+        trashTokensText.text = ttText;
     }
 
     float PressCheck(float cur, float prev)
@@ -602,13 +607,15 @@ public class GameController : MonoBehaviour
 
         // Add score
         scoreManager.AddScoreFromLines(extraClearedLines + (extraClearedLines == 0 ? 0 : LineClearBonus));
-        extraClearedLines = 0;
 
         // Check if there are any blocks in the top 4 rows
         for (int x = 0; x < blockGrid.GetLength(0); x++) for (int y = 20; y < blockGrid.GetLength(1); y++) if (blockGrid[x, y] != null) Lose();
 
         // Check the win condition
         won = scoreManager.CheckWinCondition();
+
+        // Change BG color
+        vfxManager.ChangeBgColor(extraClearedLines + (extraClearedLines == 0 ? 0 : LineClearBonus) + Mathf.Max(0, scoreManager.combo - 1));
 
         // If after adding the score player didn't win
         if (!won)
@@ -622,9 +629,6 @@ public class GameController : MonoBehaviour
 
             // Spawn next shape preview
             UpdateNextShapePreview();
-
-            // Change BG color
-            vfxManager.ChangeBgColor();
         }
 
         // Camera shake
@@ -638,6 +642,7 @@ public class GameController : MonoBehaviour
         }
 
         soundController.PlayRandomDashSound();
+        extraClearedLines = 0;
     }
 
     /// <summary>
@@ -673,7 +678,7 @@ public class GameController : MonoBehaviour
         UpdateNextShapePreview();
 
         // Change BG color
-        vfxManager.ChangeBgColor();
+        vfxManager.ChangeBgColor(0);
     }
 
     // -= Shape and block spawn and removal =-
@@ -896,7 +901,7 @@ public class GameController : MonoBehaviour
             {
                 name = "Block Preview",
                 gameObject = blockPreview,
-                direction = Vector3.down,
+                direction = Vector3.up,
                 startPosition = blockPos,
             };
             vfxManager.gameBlockTTs.Add(prevTT);
