@@ -13,7 +13,7 @@ public class ShopController : MonoBehaviour
     public SaveManager saveManager;
     public VFXManager vfxManager;
 
-    [Header("Selected shop block")]
+    [Header("Shop blocks")]
     public int selectedShopBlock;
     /// <summary>
     /// GameObjects of shop blocks that are currently in stock
@@ -25,7 +25,7 @@ public class ShopController : MonoBehaviour
     public List<ShopBlock> shopBlocks = new();
     public Transform shopBlocksParent;
 
-    [Header("Selected equipped block")]
+    [Header("Equipped blocks")]
     public int selectedEquippedBlock;
     /// <summary>
     /// GameObjects of shop blocks that are currently equipped
@@ -36,6 +36,11 @@ public class ShopController : MonoBehaviour
     /// </summary>
     public List<ShopBlock> equippedBlocks = new();
     public Transform equippedBlocksParent;
+
+    [Header("Perms")]
+    public int[] boughtPerms;
+    public int thisStagePermIndex;
+    public bool stagePermBought = false;
 
     [Header("Scroll blocks positioning")]
     public Transform shopBlocksStart;
@@ -56,7 +61,7 @@ public class ShopController : MonoBehaviour
     [Header("Scroll switch animation")]
     public float blockScrollSwitchTimer;
 
-    [Header("Selected block preview")]
+    [Header("Selected item preview")]
     public GameObject blockPreview;
     public SpriteRenderer selectedBlockRenderer;
     public TextMeshPro desciptionText;
@@ -84,7 +89,6 @@ public class ShopController : MonoBehaviour
     float prevY;
     float prevBuyInp;
 
-    // Finna actually start using properties
     public bool CanEndShop
     {
         get {
@@ -150,7 +154,7 @@ public class ShopController : MonoBehaviour
             // If selected shop scroll
             if (shopScrollSelected)
             {
-                BuyShopBlock(selectedShopBlock);
+                BuyShopItem(selectedShopBlock);
             }
             else // If Selected equipped scroll
             {
@@ -266,18 +270,29 @@ public class ShopController : MonoBehaviour
     }
 
     /// <summary>
-    /// Universal function to place shop block in a scroll in shop
+    /// Universal function to place an item in a scroll in shop. Perms get added to the top and block to the bottom
     /// </summary>
     /// <param name="inShopScroll">True to place block in shop scroll, false to equipped scroll</param>
-    /// <param name="index">Index of the block in allBlocks list</param>
-    public void AddBlock(bool inShopScroll, int index)
+    /// <param name="isBlock">True to place a block, False to place a perm. Ignored if inShopScroll is false</param>
+    /// <param name="index">Index of the block in allBlocks/shopPerms list</param>
+    public void AddItem(bool inShopScroll, bool isBlock, int index)
     {
         if (inShopScroll)
         {
-            ShopBlock newBlock = prop.allBlocks[index].Copy();
-            shopBlocks.Add(newBlock);
-            GameObject newBlockGO = Instantiate(newBlock.spritePrefab, shopBlocksParent);
-            shopBlocksGO.Add(newBlockGO);
+            if (isBlock)
+            {
+                ShopBlock newBlock = prop.allBlocks[index].Copy();
+                shopBlocks.Add(newBlock);
+                GameObject newBlockGO = Instantiate(newBlock.spritePrefab, shopBlocksParent);
+                shopBlocksGO.Add(newBlockGO);
+            }
+            else
+            {
+                ShopBlock newPerm = prop.shopPerms[index].Copy();
+                shopBlocks.Insert(0, newPerm);
+                GameObject newPermGO = Instantiate(newPerm.spritePrefab, shopBlocksParent);
+                shopBlocksGO.Insert(0, newPermGO);
+            }
         }
         else
         {
@@ -289,26 +304,39 @@ public class ShopController : MonoBehaviour
     }
 
     /// <summary>
-    /// Universal function to buy a block from shop and put it in equipped blocks
+    /// Universal function to buy an item from shop and put it in equipped blocks if it's a block
     /// </summary>
-    /// <param name="index">Index of the block in shopBlocks list</param>
+    /// <param name="index">Index of the item in shopBlocks list</param>
     /// <param name="forceBuy">True to ignore cost and buy it anyway</param>
-    /// <param name="spendMoney">True to decrease money owned by block's cost, can go below 0</param>
-    /// <returns>True if succesfully bought the block, false if failed to buy. Always returns true if forceBuy is true</returns>
-    public bool BuyShopBlock(int index, bool forceBuy = false, bool spendMoney = true)
+    /// <param name="spendMoney">True to decrease money owned by block's cost, can go below 0 if forceBuy is true</param>
+    /// <returns>True if succesfully bought the item, false if failed to buy. Always returns true if forceBuy is true</returns>
+    public bool BuyShopItem(int index, bool forceBuy = false, bool spendMoney = true)
     {
         if (shopBlocks.Count <= index) return false; // If index is outside the bounds of the list
         if (index < 0) return false; // Again
         if (shopBlocks[index].cost > money && !forceBuy && spendMoney) return false; // If player has not enough money
 
-        // Move
-        if (spendMoney) money -= shopBlocks[index].cost;               // Take away money
-        shopBlocks[index].isEquipped = true;                           // Set equipped in relevant shopBlock to true
-        equippedBlocks.Add(shopBlocks[index]);                         // Add this block to equipped
-        shopBlocks.RemoveAt(index);                                    // Remove this block from shop blocks
-        shopBlocksGO[index].transform.SetParent(equippedBlocksParent); // Set transform parent to equipped blocks parent
-        equippedBlocksGO.Add(shopBlocksGO[index]);                     // Add this block to equipped blocks
-        shopBlocksGO.RemoveAt(index);                                  // Remove the GameObject from shop blocks
+        if (shopBlocks[index].isPerm) // If this is a perm
+        {
+            // Buy
+            if (spendMoney) money -= shopBlocks[index].cost;                                  // Take away money
+            boughtPerms[shopBlocks[index].saveBitIndex]++;                                    // Increase bought perm count
+            if (shopBlocks[index].saveBitIndex == thisStagePermIndex) stagePermBought = true; // If this is the stage perm, mark it as bought
+            shopBlocks.RemoveAt(index);                                                       // Remove this block from shop blocks
+            Destroy(shopBlocksGO[index]);                                                     // Remove GameObjectfrom the scene
+            shopBlocksGO.RemoveAt(index);                                                     // Remove the GameObject from shop blocks
+        }
+        else // If this is a block
+        {
+            // Buy
+            if (spendMoney) money -= shopBlocks[index].cost;                                  // Take away money
+            shopBlocks[index].isEquipped = true;                                              // Set equipped in relevant shopBlock to true
+            equippedBlocks.Add(shopBlocks[index]);                                            // Add this block to equipped
+            shopBlocks.RemoveAt(index);                                                       // Remove this block from shop blocks
+            shopBlocksGO[index].transform.SetParent(equippedBlocksParent);                    // Set transform parent to equipped blocks parent
+            equippedBlocksGO.Add(shopBlocksGO[index]);                                        // Add this block to equipped blocks
+            shopBlocksGO.RemoveAt(index);                                                     // Remove the GameObject from shop blocks
+        }
 
         // Clamp selected index
         selectedShopBlock = Mathf.Clamp(selectedShopBlock, 0, shopBlocksGO.Count - 1);
@@ -375,15 +403,28 @@ public class ShopController : MonoBehaviour
         }
     }
 
+    public void RestockPerm()
+    {
+        // Make sure to not restock if htere is already a perm in shop
+        bool permAlreadyInShop = false;
+        foreach (var sb in shopBlocks) permAlreadyInShop = permAlreadyInShop || sb.isPerm;
+        if (permAlreadyInShop) return;
+
+        // No perms detected, place one
+        if (thisStagePermIndex != int.MaxValue) AddItem(true, false, thisStagePermIndex);
+    }
+
     public void RestockShop(int amountRestocked = 0)
     {
         int restockAmount = amountRestocked == 0 ? shopSlots - shopBlocks.Count : amountRestocked;
         bool anyBlockIsAffordable = false;
 
+        RestockPerm();
+
         // Stock all needed blocks
         for (int i = 0; i < restockAmount; i++)
         {
-            int randomBlock = WeighedRandomShopBlock();
+            int randomBlock = WeighedRandomShopItem();
 
             // If not failed to generate a random block
             if (randomBlock != -1)
@@ -393,7 +434,7 @@ public class ShopController : MonoBehaviour
                 {
                     if (prop.allBlocks[randomBlock].cost <= money) anyBlockIsAffordable = true;
 
-                    AddBlock(true, randomBlock);
+                    AddItem(true, true, randomBlock);
                 }
 
                 // If block is last AND no block before was affordable
@@ -408,38 +449,49 @@ public class ShopController : MonoBehaviour
                     }
 
                     // Select one of them
-                    int newRandomBlock = WeighedRandomShopBlock(prop.allBlocks, affordableWeights);
+                    int newRandomBlock = WeighedRandomShopItem(prop.allBlocks, affordableWeights);
 
-                    AddBlock(true, newRandomBlock);
+                    AddItem(true, true, newRandomBlock);
                 }
             }
         }
     }
 
     /// <summary>
-    /// 
+    /// Defaults to blocks
     /// </summary>
-    /// <param name="listOfBlocks">List of ShopBlocks to choose from, leave as null to use normal prop.allBlocks list</param>
-    /// <param name="listOfWeights">Additional list of weights to add to listOfBlocks, leave as null to use listOfBlocks' weights</param>
+    /// <param name="listOfItems">List of ShopBlocks to choose from, leave as null to use normal prop.allBlocks list</param>
+    /// <param name="listOfWeights">Additional list of weights to add to listOfBlocks, leave as null to use listOfItems' weights</param>
+    /// <param name="pool">ItemPool that will be checked to ensure no repeats. NONE to not check any, BLOCK (default) to check blocks and PERM to check perms</param>
     /// <returns>An index of weighed random block from allBlocks list. If somehow the weight overflows past the list, returns -1</returns>
-    public int WeighedRandomShopBlock(ShopBlock[] listOfBlocks = null, float[] listOfWeights = null)
+    public int WeighedRandomShopItem(ShopBlock[] listOfItems = null, float[] listOfWeights = null, ItemPool pool = ItemPool.BLOCK)
     {
-        ShopBlock[] blocksList = listOfBlocks ?? prop.allBlocks;
+        ShopBlock[] itemsList = listOfItems ?? prop.allBlocks;
 
-        float[] blocksWeight = new float[blocksList.Length];
-        for (int i = 0; i < blocksList.Length; i++) blocksWeight[i] = blocksList[i].Weight;
+        float[] itemsWeight = new float[itemsList.Length];
+        for (int i = 0; i < itemsList.Length; i++) itemsWeight[i] = itemsList[i].Weight;
 
-        float[] weightList = listOfWeights ?? blocksWeight;
+        float[] weightList = listOfWeights ?? itemsWeight;
 
         float weightTotal = 0;
 
-        for (int i = 0; i < blocksList.Length; i++) if (IsBlockInPool(blocksList[i].name)) weightTotal += weightList[i];
+        for (int i = 0; i < itemsList.Length; i++)
+            if (
+                (IsBlockInPool(itemsList[i].saveBitIndex) && pool == ItemPool.BLOCK) ||
+                (IsPermInPool(itemsList[i].saveBitIndex) && pool == ItemPool.PERM) ||
+                pool == ItemPool.NONE
+            )
+                weightTotal += weightList[i];
 
         float randomWeight = Random.Range(0f, weightTotal);
 
-        for (int i = 0; i < blocksList.Length; i++)
+        for (int i = 0; i < itemsList.Length; i++)
         {
-            if (IsBlockInPool(blocksList[i].name))
+            if (
+                (IsBlockInPool(itemsList[i].saveBitIndex) && pool == ItemPool.BLOCK) ||
+                (IsPermInPool(itemsList[i].saveBitIndex) && pool == ItemPool.PERM) ||
+                pool == ItemPool.NONE
+            )
             {
                 if (randomWeight <= weightList[i]) { return i; }
                 else { randomWeight -= weightList[i]; }
@@ -454,10 +506,22 @@ public class ShopController : MonoBehaviour
     /// </summary>
     /// <param name="name">Name of the block to check</param>
     /// <returns>True if block is in pool (Not in shopBlocks or equippedBlocks)</returns>
-    public bool IsBlockInPool(string name)
+    public bool IsBlockInPool(int id)
     {
-        foreach (var block in shopBlocks) if (block.name == name) return false;
-        foreach (var block in equippedBlocks) if (block.name == name) return false;
+        foreach (var item in shopBlocks) if (item.saveBitIndex == id && !item.isPerm) return false;
+        foreach (var block in equippedBlocks) if (block.saveBitIndex == id) return false;
+        return true;
+    }
+
+    /// <summary>
+    /// Universal function that determines if the perm is in pool and can be put in shop
+    /// </summary>
+    /// <param name="name">Name of the perm to check</param>
+    /// <returns>True if perm is in pool (Not in shopBlocks or boughtPerms)</returns>
+    public bool IsPermInPool(int id)
+    {
+        foreach (var item in shopBlocks) if (item.saveBitIndex == id && item.isPerm) return false;
+        if (boughtPerms[id] > 0 && prop.shopPerms[id].permType != PermType.STACKABLE) return false;
         return true;
     }
 }

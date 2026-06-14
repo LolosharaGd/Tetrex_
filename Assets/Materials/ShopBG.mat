@@ -94,7 +94,7 @@ Material:
     - _SrcBlend: 1
     - _Target_1_Size: 2.25
     - _Target_2_Size: 0
-    - _Transition_Progress: 0
+    - _Transition_Progress: 1
     - _UVSec: 0
     - _Use_Voronoi: 1
     - _ZWrite: 1

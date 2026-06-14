@@ -1788,6 +1788,7 @@ MonoBehaviour:
   equippedBlocksGO: []
   equippedBlocks: []
   equippedBlocksParent: {fileID: 2132159893}
+  boughtPerms: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   shopBlocksStart: {fileID: 2075323190}
   equippedBlocksStart: {fileID: 1639209381}
   blockScrollSwitchTimer: 0
@@ -1803,10 +1804,11 @@ MonoBehaviour:
   activUserInputIcon: {fileID: 972681046}
   blockPropActiveColor: {r: 1, g: 1, b: 1, a: 1}
   blockPropInactiveColor: {r: 1, g: 1, b: 1, a: 0.5019608}
-  money: 10
   boughtOneBlock: 0
   buyExitGuideText: {fileID: 292584574}
+  money: 10
   sellTokens: 0
+  shopSlots: 0
   shopScrollSelected: 1
 --- !u!114 &1984264999
 MonoBehaviour:
@@ -1821,7 +1823,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prop: {fileID: 11400000, guid: ca438c3a75248b34fb00307c43e2abf2, type: 2}
+  cam: {fileID: 0}
+  controller: {fileID: 0}
   shopController: {fileID: 1984264998}
+  blurredCamera: {fileID: 0}
+  gameBlurredMaterial: {fileID: 0}
+  gameBlurredQuad: {fileID: 0}
+  blurSpeed: 0
+  maxBlur: 0
+  blurProgress: 0
+  blurringNow: 0
   transitionBgMaterial: {fileID: 2100000, guid: a58aba33901b83744b2032ab4ca37f61, type: 2}
   newBgColor: {r: 0, g: 0, b: 0, a: 0}
   shakeSpeed: 0
@@ -1843,44 +1854,65 @@ MonoBehaviour:
     gameObject: {fileID: 1922304882}
     direction: {x: 0, y: 1, z: 0}
     startPosition: {x: 0, y: 2.5, z: 0}
+    applyAntishake: 0
   - name: Money
     gameObject: {fileID: 1768034178}
     direction: {x: 0, y: 1, z: 0}
     startPosition: {x: 0, y: 4, z: 0}
+    applyAntishake: 0
   - name: Description
     gameObject: {fileID: 549809805}
     direction: {x: 0, y: -1, z: 0}
     startPosition: {x: 0, y: -1, z: 0}
+    applyAntishake: 0
   - name: Notes
     gameObject: {fileID: 1034763129}
     direction: {x: 0, y: -1, z: 0}
     startPosition: {x: 0, y: -4.7, z: 0}
+    applyAntishake: 0
   - name: Price
     gameObject: {fileID: 2101862694}
     direction: {x: 0, y: 1, z: 0}
     startPosition: {x: 0, y: 0.75, z: 0}
+    applyAntishake: 0
   - name: Continue Guide
     gameObject: {fileID: 292584573}
     direction: {x: 0, y: 1, z: 0}
     startPosition: {x: 0, y: 4.2, z: 0}
+    applyAntishake: 0
   - name: Destr Icon
     gameObject: {fileID: 63092571}
     direction: {x: 0, y: -1, z: 0}
     startPosition: {x: -1.05, y: -4, z: 0}
+    applyAntishake: 0
   - name: Clear Row icon
     gameObject: {fileID: 1973201703}
     direction: {x: 0, y: -1, z: 0}
     startPosition: {x: -0.35, y: -4, z: 0}
+    applyAntishake: 0
   - name: Land Icon
     gameObject: {fileID: 553932727}
     direction: {x: 0, y: -1, z: 0}
     startPosition: {x: 0.35, y: -4, z: 0}
+    applyAntishake: 0
   - name: Input Icon
     gameObject: {fileID: 972681045}
     direction: {x: 0, y: -1, z: 0}
     startPosition: {x: 1.05, y: -4, z: 0}
+    applyAntishake: 0
   gameTTs: []
   gameBlockTTs: []
+  curLevel: 0
+  ppbPoints: []
+  ppbSprites: []
+  ppbLines: []
+  normalStageSprite: {fileID: 0}
+  completedStageSprite: {fileID: 0}
+  normalLevelSprite: {fileID: 0}
+  currentLevelSprite: {fileID: 0}
+  completedLevelSprite: {fileID: 0}
+  bossLevelSprite: {fileID: 0}
+  currentBossLevelSprite: {fileID: 0}
   endAnimSpeed: 2
   mode: 1
 --- !u!114 &1984265000
@@ -1899,6 +1931,7 @@ MonoBehaviour:
   blockMoveSource: {fileID: 0}
   blockRotateSource: {fileID: 0}
   blockDashSource: {fileID: 0}
+  blockTrashSource: {fileID: 0}
   rowClearSource: {fileID: 0}
   musicSource: {fileID: 1741109545}
 --- !u!1 &2075323189

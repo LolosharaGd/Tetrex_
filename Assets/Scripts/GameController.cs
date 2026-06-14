@@ -30,6 +30,7 @@ public class GameController : MonoBehaviour
 
     [Header("-== GameObject Parents ==-")]
     public bool[] equippedBlocks;
+    public int[] perms;
     /// <summary>
     /// Parent for all blocks
     /// </summary>

@@ -50,6 +50,10 @@ public class PropertiesScriptableObject : ScriptableObject
 
     [Header("-== SHOP ==-")]
     /// <summary>
+    /// List of all possible Perms that can appear in the shop
+    /// </summary>
+    public ShopBlock[] shopPerms;
+    /// <summary>
     /// List of all possible ShopBlocks that can appear in the shop
     /// </summary>
     public ShopBlock[] allBlocks;

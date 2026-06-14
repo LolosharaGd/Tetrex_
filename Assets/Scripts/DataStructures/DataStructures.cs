@@ -15,7 +15,6 @@ namespace Tetrex.DataStructures
         public string name;
         public string description;
         public string notes;
-        public bool isEquipped;
         public GameObject spritePrefab;
         public int cost;
         public float Weight
@@ -35,12 +34,18 @@ namespace Tetrex.DataStructures
         public BlockRarity rarity;
         public BlockAlignment alignment;
 
+        public int saveBitIndex;
+
+        [Header("Block only")]
+        public bool isEquipped;
         public bool blockActivatesOnLanding = true;
         public bool blockActivatesOnClearRow = true;
         public bool blockActivatesOnUserInput = false;
         public bool blockSelfDestructs = true;
 
-        public int saveBitIndex;
+        [Header("Perm only")]
+        public bool isPerm;
+        public PermType permType;
 
         public ShopBlock Copy()
         {
@@ -58,7 +63,8 @@ namespace Tetrex.DataStructures
                 blockActivatesOnClearRow=blockActivatesOnClearRow,
                 blockActivatesOnLanding=blockActivatesOnLanding,
                 blockActivatesOnUserInput=blockActivatesOnUserInput,
-                blockSelfDestructs=blockSelfDestructs
+                blockSelfDestructs=blockSelfDestructs,
+                isPerm=isPerm
             };
         }
     }
@@ -232,4 +238,18 @@ namespace Tetrex.DataStructures
     public enum BlockAlignment { CURSED, NORMAL, HOLY }
 
     public enum BlockEffect { NOTHING, MINED, PROTECTED }
+
+    /// <summary>
+    /// Active: Bought one time, can be used in game.
+    /// Passive: Bought one time.
+    /// Stackable: Can be bought multiple times to increase strength.
+    /// </summary>
+    public enum PermType { ACTIVE, PASSIVE, STACKABLE }
+
+    /// <summary>
+    /// A shorthand for referring to different perms in code. Int representation of this matches with target perm's saveBitIndex
+    /// </summary>
+    public enum Perm { TrashToken }
+
+    public enum ItemPool { NONE, BLOCK, PERM }
 }

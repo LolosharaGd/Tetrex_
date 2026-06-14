@@ -81,7 +81,7 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Normal_Color: {r: 0.45148987, g: 0.050781608, b: 0.29843384, a: 1}
+    - _Normal_Color: {r: 0.013711661, g: 0.054291748, b: 0.45419338, a: 1}
     - _Transition_Color: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &5415222083968762368

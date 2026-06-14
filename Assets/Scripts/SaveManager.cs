@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms.Impl;
+using Tetrex.DataStructures;
+using UnityEditor;
 
 public class SaveManager : MonoBehaviour
 {
@@ -104,6 +107,20 @@ public class SaveManager : MonoBehaviour
 
         controller.currentTrashTokens = PlayerPrefs.GetInt("trashTokens");
 
+        List<int> loadedPermInts = new();
+        int savedPermIntsCount = PlayerPrefs.GetInt("SavedPermInts");
+        for (int i = 0; i < savedPermIntsCount; i++) // Load
+        {
+            loadedPermInts.Add(PlayerPrefs.GetInt("BoughtPerm" + i));
+        }
+        for (int intIndex = 0; intIndex < loadedPermInts.Count; intIndex++) // Unpack
+        {
+            for (int byteIndex = 0; byteIndex < 4; byteIndex++)
+            {
+                controller.perms[intIndex * 4 + byteIndex] = (loadedPermInts[intIndex] >> (byteIndex * 8)) & 0b11111111;
+            }
+        }
+
         vfxManager.curLevel = level;
         vfxManager.UpdatePPBPointsTextures();
     }
@@ -123,6 +140,9 @@ public class SaveManager : MonoBehaviour
 
             // Increase shop slots
             PlayerPrefs.SetInt("shopSlots", PlayerPrefs.GetInt("shopSlots") + 1);
+
+            // Prepare to refresh perm
+            PlayerPrefs.SetInt("RefreshPerm", 1);
         }
 
         PlayerPrefs.Save();
@@ -149,9 +169,36 @@ public class SaveManager : MonoBehaviour
             {
                 if (((loadedInt >> (byteIndex * 8)) & 0b11111111) != 0)
                 {
-                    shopController.AddBlock(false, ((loadedInt >> (byteIndex * 8)) & 0b11111111) - 1);
+                    shopController.AddItem(false, true, ((loadedInt >> (byteIndex * 8)) & 0b11111111) - 1);
                 }
             }
+        }
+
+        // Load bought perms
+        List<int> loadedPermInts = new();
+        int savedPermIntsCount = PlayerPrefs.GetInt("SavedPermInts");
+        for (int i = 0; i < savedPermIntsCount; i++) // Load
+        {
+            loadedPermInts.Add(PlayerPrefs.GetInt("BoughtPerm" + i));
+        }
+        for (int intIndex = 0; intIndex < loadedPermInts.Count; intIndex++) // Unpack
+        {
+            for (int byteIndex = 0; byteIndex < 4; byteIndex++)
+            {
+                shopController.boughtPerms[intIndex * 4 + byteIndex] = (loadedPermInts[intIndex] >> (byteIndex * 8)) & 0b11111111;
+            }
+        }
+
+        // Refresh or load perm in shop
+        if (PlayerPrefs.GetInt("RefreshPerm") == 1) // Refresh
+        {
+            int newPermId = shopController.WeighedRandomShopItem(prop.shopPerms, null, ItemPool.PERM);
+            if (newPermId == -1) newPermId = 0;
+            shopController.thisStagePermIndex = newPermId;
+        }
+        else // Load
+        {
+            shopController.thisStagePermIndex = PlayerPrefs.GetInt("StagePermID");
         }
 
         shopController.RestockShop();
@@ -198,12 +245,41 @@ public class SaveManager : MonoBehaviour
 
         int fromlvl = PlayerPrefs.GetInt("level");
 
+        // This does not allow for gaps in perm IDs
+        // Save perms
+        List<byte> permBytes = new();
+        List<int> permInts = new();
+        for (int i = 0; i < prop.shopPerms.Length; i++)
+        {
+            permBytes.Add((byte)shopController.boughtPerms[i]);
+
+            if (permBytes.Count >= 4)
+            {
+                int permInt = permBytes[0] + (permBytes[1] << 8) + (permBytes[2] << 16) + (permBytes[3] << 24);
+                permInts.Add(permInt);
+                permBytes.Clear();
+            }
+        }
+        // If some bytes were still not saved
+        if (permBytes.Count > 0)
+        {
+            int permInt = permBytes[0] + (permBytes.Count > 1 ? permBytes[1] << 8 : 0) + (permBytes.Count > 2 ? permBytes[2] << 16 : 0) + (permBytes.Count > 3 ? permBytes[3] << 24 : 0);
+            permInts.Add(permInt);
+            permBytes.Clear();
+        }
+
+        for (int intIndex = 0; intIndex < permInts.Count; intIndex++)
+        {
+            PlayerPrefs.SetInt("BoughtPerm" + intIndex, permInts[intIndex]);
+        }
+        PlayerPrefs.SetInt("SavedPermInts", permInts.Count);
+        
+        // Save this stage perm
+        PlayerPrefs.SetInt("StagePermID", shopController.stagePermBought ? int.MaxValue : shopController.thisStagePermIndex);
+        PlayerPrefs.SetInt("RefreshPerm", 0);
+
         // Increase level by one
         PlayerPrefs.SetInt("level", fromlvl + 1);
-        //if (fromlvl % 3 == 0)
-        //{
-        //    shopController.sellTokens++;
-        //}
 
         // Save sell tokens
         PlayerPrefs.SetInt("sellTokens", shopController.sellTokens);
@@ -233,6 +309,9 @@ public class SaveManager : MonoBehaviour
         // Reset materials
         shopBgMaterial.SetFloat("_Transition_Progress", 1f);
         transitionMaterial.SetFloat("_Transition_Progress", 1f);
+
+        // Prepare perm refresh
+        PlayerPrefs.SetInt("RefreshPerm", 1);
 
         SceneManager.LoadScene(0);
     }
