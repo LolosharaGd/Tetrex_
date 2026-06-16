@@ -800,43 +800,51 @@ MonoBehaviour:
     - {fileID: 8300000, guid: f56c095d2f743a046b0df67acc93d2ae, type: 3}
     - {fileID: 8300000, guid: 215079f93a368a348a17f6d8a2c5dc42, type: 3}
   stageMusic:
-  - name: 0 - Machine code
+  - name: 0
     clips:
     - {fileID: 8300000, guid: 6921b9ed9cd5a2841bc9e07def2319cc, type: 3}
     - {fileID: 8300000, guid: 011fcacb691e1c3499ef0e36c5af0b19, type: 3}
     - {fileID: 8300000, guid: 9fe6755ca507de74ea1b6a6c5c69ae1b, type: 3}
     - {fileID: 8300000, guid: b52b1504810fd4f478f1934fe76864d7, type: 3}
-  - name: 1 - Beginning
+    - {fileID: 8300000, guid: 64df734e40cc34c4b912f408099530c4, type: 3}
+    - {fileID: 8300000, guid: def4f0839b67194459f3d84c2bde7e95, type: 3}
+    - {fileID: 8300000, guid: 98e322f7d7b7e904588fec9d265970e9, type: 3}
+    - {fileID: 8300000, guid: b3fe10e10f5286249924b637f2208bb0, type: 3}
+    - {fileID: 8300000, guid: 8ae976a5e34b75c49b1bb06e60586688, type: 3}
+    - {fileID: 8300000, guid: a050d40305b3af04dbe9fe6fb8537dee, type: 3}
+    - {fileID: 8300000, guid: 99a1734d2007e8949b8fa4a70020cab3, type: 3}
+    - {fileID: 8300000, guid: 078b1efe3eb5c7944877c96b9d936042, type: 3}
+  - name: 1
     clips:
     - {fileID: 8300000, guid: 6921b9ed9cd5a2841bc9e07def2319cc, type: 3}
     - {fileID: 8300000, guid: 011fcacb691e1c3499ef0e36c5af0b19, type: 3}
     - {fileID: 8300000, guid: 9fe6755ca507de74ea1b6a6c5c69ae1b, type: 3}
     - {fileID: 8300000, guid: b52b1504810fd4f478f1934fe76864d7, type: 3}
-  - name: 2 - Acceleration
+  - name: 2
     clips:
     - {fileID: 8300000, guid: 64df734e40cc34c4b912f408099530c4, type: 3}
     - {fileID: 8300000, guid: def4f0839b67194459f3d84c2bde7e95, type: 3}
     - {fileID: 8300000, guid: 98e322f7d7b7e904588fec9d265970e9, type: 3}
     - {fileID: 8300000, guid: b3fe10e10f5286249924b637f2208bb0, type: 3}
-  - name: 3 - Avoidance
+  - name: 3
     clips:
     - {fileID: 8300000, guid: 8ae976a5e34b75c49b1bb06e60586688, type: 3}
     - {fileID: 8300000, guid: a050d40305b3af04dbe9fe6fb8537dee, type: 3}
     - {fileID: 8300000, guid: 99a1734d2007e8949b8fa4a70020cab3, type: 3}
     - {fileID: 8300000, guid: 078b1efe3eb5c7944877c96b9d936042, type: 3}
   stageBossMusic:
-  - name: 0 - Machine code
+  - name: 0
     clips:
     - {fileID: 8300000, guid: 2beea53928e6f14409624969c26514de, type: 3}
-  - name: 1 - Beginning
+  - name: 1
     clips:
     - {fileID: 8300000, guid: 1f68aa689a0285f4e9d3d9a744a96766, type: 3}
-  - name: 2 - Acceleration
+  - name: 2
     clips:
     - {fileID: 8300000, guid: e843247b9ad014f43977543c1cb73720, type: 3}
-  - name: 3 - Avoidance
+  - name: 3
     clips:
-    - {fileID: 8300000, guid: 1f68aa689a0285f4e9d3d9a744a96766, type: 3}
+    - {fileID: 8300000, guid: 7ca62b5e4bcaf5940805eb1311d937c5, type: 3}
   shopMusic:
     name: Shop
     clips:
