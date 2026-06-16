@@ -16,6 +16,7 @@ public class VFXManager : MonoBehaviour
     [SerializeField] Camera cam;
     [SerializeField] GameController controller;
     [SerializeField] ShopController shopController;
+    [SerializeField] SoundController soundController;
 
     [Header("-== Pause Blur ==-")]
     public Camera blurredCamera;
@@ -25,7 +26,12 @@ public class VFXManager : MonoBehaviour
     [SerializeField] float maxBlur;
     [SerializeField] float blurProgress;
     public bool blurringNow;
-    float blurTimer;
+    public float blurProgressUnscaled;
+
+    /// <summary>
+    /// Whether the sounds have been totally muffled already
+    /// </summary>
+    bool totallyMuffledOrUnmuffled;
 
     [Header("-== Main BG ==-")]
     public Material transitionBgMaterial;
@@ -115,8 +121,8 @@ public class VFXManager : MonoBehaviour
     void InGameUpdate()
     {
         // Blur
-        blurTimer = Mathf.Clamp(blurTimer + Time.deltaTime * (blurringNow ? 1f : -1f) * blurSpeed, 0f, 1f);
-        blurProgress = 1f - Mathf.Pow(blurTimer - 1f, 4);
+        blurProgressUnscaled = Mathf.Clamp(blurProgressUnscaled + Time.deltaTime * (blurringNow ? 1f : -1f) * blurSpeed, 0f, 1f);
+        blurProgress = 1f - Mathf.Pow(blurProgressUnscaled - 1f, 4);
         gameBlurredMaterial.SetFloat("_Step_Size", blurProgress * maxBlur);
         // Text transparecy later in function
         PauseMenuUpdate();
@@ -217,7 +223,7 @@ public class VFXManager : MonoBehaviour
         for (int i = 0; i < 9; i++)
         {
             // Points
-            ppbSprites[i].color = new Color(ppbSprites[i].color.r, ppbSprites[i].color.g, ppbSprites[i].color.b, Mathf.Min(1f, blurProgress * 2f));
+            ppbSprites[i].color = new Color(ppbSprites[i].color.r, ppbSprites[i].color.g, ppbSprites[i].color.b, Mathf.Min(1f, blurProgressUnscaled * 2f));
 
             Vector3 offs = Vector3.zero;
 
@@ -252,9 +258,21 @@ public class VFXManager : MonoBehaviour
             // Lines
             if (i != 8)
             {
-                ppbLines[i].startWidth = 0.18181818f * Mathf.Max(0f, blurProgress * 2f - 1f);
+                ppbLines[i].startWidth = 0.18181818f * Mathf.Max(0f, blurProgressUnscaled * 2f - 1f);
                 ppbLines[i].SetPositions(new Vector3[] { ppbPoints[i].position + Vector3.forward, ppbPoints[i + 1].position + Vector3.forward });
             }
+        }
+
+        // Muffling
+        if (blurProgressUnscaled != 0f && blurProgressUnscaled != 1f)
+        {
+            totallyMuffledOrUnmuffled = false;
+            soundController.SetPauseMuffling(blurProgressUnscaled);
+        }
+        else if (!totallyMuffledOrUnmuffled)
+        {
+            totallyMuffledOrUnmuffled = true;
+            soundController.SetPauseMuffling(blurProgressUnscaled);
         }
     }
 

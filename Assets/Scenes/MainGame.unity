@@ -217,6 +217,7 @@ GameObject:
   m_Component:
   - component: {fileID: 88530947}
   - component: {fileID: 88530948}
+  - component: {fileID: 88530949}
   m_Layer: 0
   m_Name: BlockMoveSFX
   m_TagString: Untagged
@@ -321,6 +322,31 @@ AudioSource:
     m_PostInfinity: 2
     m_RotationOrder: 4
   reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!169 &88530949
+AudioLowPassFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88530946}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_LowpassResonanceQ: 1
+  lowpassLevelCustomCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -446,6 +472,14 @@ MonoBehaviour:
   blockTrashSource: {fileID: 942731288}
   rowClearSource: {fileID: 1595820139}
   musicSource: {fileID: 335113041}
+  pauseMuffled:
+  - {fileID: 335113043}
+  - {fileID: 88530949}
+  - {fileID: 1171632767}
+  - {fileID: 360085817}
+  - {fileID: 942731289}
+  - {fileID: 1595820141}
+  muffledFrequency: 550
 --- !u!114 &90199168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -510,6 +544,7 @@ MonoBehaviour:
   cam: {fileID: 0}
   controller: {fileID: 90199165}
   shopController: {fileID: 0}
+  soundController: {fileID: 90199167}
   blurredCamera: {fileID: 1554137848}
   gameBlurredMaterial: {fileID: 2100000, guid: 43a9286a26a0ef24ba33ee91337d503f, type: 2}
   gameBlurredQuad: {fileID: 903606050}
@@ -517,8 +552,10 @@ MonoBehaviour:
   maxBlur: 0.001074
   blurProgress: 0
   blurringNow: 0
+  blurProgressUnscaled: 0
   transitionBgMaterial: {fileID: 2100000, guid: a58aba33901b83744b2032ab4ca37f61, type: 2}
   newBgColor: {r: 0.09803922, g: 0.09803922, b: 0.09803922, a: 0}
+  bgHue: 0
   shakeSpeed: 0
   shakeTimer: 0
   shakePower: 0
@@ -1515,6 +1552,7 @@ GameObject:
   m_Component:
   - component: {fileID: 335113042}
   - component: {fileID: 335113041}
+  - component: {fileID: 335113043}
   m_Layer: 0
   m_Name: Music
   m_TagString: Untagged
@@ -1633,6 +1671,31 @@ Transform:
   m_Father: {fileID: 519420032}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!169 &335113043
+AudioLowPassFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 335113040}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_LowpassResonanceQ: 1
+  lowpassLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &360085814
 GameObject:
   m_ObjectHideFlags: 0
@@ -1643,6 +1706,7 @@ GameObject:
   m_Component:
   - component: {fileID: 360085816}
   - component: {fileID: 360085815}
+  - component: {fileID: 360085817}
   m_Layer: 0
   m_Name: BlockDashSFX
   m_TagString: Untagged
@@ -1761,6 +1825,31 @@ Transform:
   m_Father: {fileID: 519420032}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!169 &360085817
+AudioLowPassFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360085814}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_LowpassResonanceQ: 1
+  lowpassLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &397407617
 GameObject:
   m_ObjectHideFlags: 0
@@ -3426,6 +3515,7 @@ GameObject:
   m_Component:
   - component: {fileID: 942731287}
   - component: {fileID: 942731288}
+  - component: {fileID: 942731289}
   m_Layer: 0
   m_Name: BlockTrashSFX
   m_TagString: Untagged
@@ -3530,6 +3620,31 @@ AudioSource:
     m_PostInfinity: 2
     m_RotationOrder: 4
   reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!169 &942731289
+AudioLowPassFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 942731286}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_LowpassResonanceQ: 1
+  lowpassLevelCustomCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -4008,6 +4123,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1171632766}
   - component: {fileID: 1171632765}
+  - component: {fileID: 1171632767}
   m_Layer: 0
   m_Name: BlockRotateSFX
   m_TagString: Untagged
@@ -4126,6 +4242,31 @@ Transform:
   m_Father: {fileID: 519420032}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!169 &1171632767
+AudioLowPassFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1171632764}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_LowpassResonanceQ: 1
+  lowpassLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1322187195
 GameObject:
   m_ObjectHideFlags: 0
@@ -5031,6 +5172,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1595820140}
   - component: {fileID: 1595820139}
+  - component: {fileID: 1595820141}
   m_Layer: 0
   m_Name: RowClearSFX
   m_TagString: Untagged
@@ -5149,6 +5291,31 @@ Transform:
   m_Father: {fileID: 519420032}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!169 &1595820141
+AudioLowPassFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1595820138}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_LowpassResonanceQ: 1
+  lowpassLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1646467659
 GameObject:
   m_ObjectHideFlags: 0

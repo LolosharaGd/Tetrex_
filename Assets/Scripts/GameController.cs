@@ -558,6 +558,8 @@ public class GameController : MonoBehaviour
         previewDashBlocks.Clear();
 
         // Check block effects
+        bool landedOnDefuse = false;
+        Vector2Int defusePos = new Vector2Int(-1, -1);
         List<NormalBlock> destrBLocks = new();
         foreach (var block in controlledBlocks.CloneViaFakeSerialization())
         {
@@ -570,16 +572,29 @@ public class GameController : MonoBehaviour
                 RemoveBlock(block);
                 RemoveBlockEffect(blockPos);
             }
+            // Check if landed on defuse BE
+            else if (blockEffectGrid[blockPos.x, blockPos.y] == BlockEffect.DEFUSE)
+            {
+                landedOnDefuse = true;
+                defusePos = blockPos;
+            }
         }
 
         // Activate all controlled blocks that need to be
-        foreach (var block in controlledBlocks) if (block.activateOnLanding && !destrBLocks.Contains(block)) ActivateBlock(block);
+        if (!landedOnDefuse)
+        {
+            foreach (var block in controlledBlocks) if (block.activateOnLanding && !destrBLocks.Contains(block)) ActivateBlock(block);
+        }
+        else
+        {
+            RemoveBlockEffect(defusePos);
+        }
 
         // DEBUG: place a block effect where blocks landed
         //PlaceBlockEffect(controlledBlocks[0].GetPosInGrid(blockGrid), BlockEffect.MINED);
         //PlaceBlockEffect(controlledBlocks[1].GetPosInGrid(blockGrid), BlockEffect.MINED);
         //PlaceBlockEffect(controlledBlocks[2].GetPosInGrid(blockGrid), BlockEffect.MINED);
-        //PlaceBlockEffect(controlledBlocks[3].GetPosInGrid(blockGrid), BlockEffect.MINED);
+        //PlaceBlockEffect(controlledBlocks[3].GetPosInGrid(blockGrid) + Vector2Int.up, BlockEffect.DEFUSE);
 
         // Clear controlled blocks list
         controlledBlocks.Clear();
@@ -1166,16 +1181,25 @@ public class GameController : MonoBehaviour
 
     public void ActivateBlock(NormalBlock block)
     {
-        BlockAction[] returnedActions = block.Activate(blockGrid);
-
-        foreach (var action in returnedActions)
+        Vector2Int blockPos = block.GetPosInGrid(blockGrid);
+        // Check for defuse
+        if (blockEffectGrid[blockPos.x, blockPos.y] == BlockEffect.DEFUSE)
         {
-            if      (action.type == BlockActionType.REMOVEEFFECT)  queuedActionsRemoveEffect.Add(action);
-            else if (action.type == BlockActionType.PLACEEFFECT)   queuedActionsPlaceEffect.Add(action);
-            else if (action.type == BlockActionType.REMOVEBLOCK)   queuedActionsRemoveBlock.Add(action);
-            else if (action.type == BlockActionType.SPAWNBLOCK)    queuedActionsSpawnBlock.Add(action);
-            else if (action.type == BlockActionType.CLEARROW)      queuedActionsClearrow.Add(action);
-            else if (action.type == BlockActionType.STOP)          stopActionQueued = true;
+            RemoveBlockEffect(blockPos);
+        }
+        else
+        {
+            BlockAction[] returnedActions = block.Activate(blockGrid);
+
+            foreach (var action in returnedActions)
+            {
+                if (action.type == BlockActionType.REMOVEEFFECT) queuedActionsRemoveEffect.Add(action);
+                else if (action.type == BlockActionType.PLACEEFFECT) queuedActionsPlaceEffect.Add(action);
+                else if (action.type == BlockActionType.REMOVEBLOCK) queuedActionsRemoveBlock.Add(action);
+                else if (action.type == BlockActionType.SPAWNBLOCK) queuedActionsSpawnBlock.Add(action);
+                else if (action.type == BlockActionType.CLEARROW) queuedActionsClearrow.Add(action);
+                else if (action.type == BlockActionType.STOP) stopActionQueued = true;
+            }
         }
     }
 
@@ -1435,7 +1459,7 @@ public class GameController : MonoBehaviour
             {
                 name = "BE TT",
                 gameObject = newBlEfGO,
-                direction = position.y <= 11 ? Vector3.down : Vector3.up,
+                direction = Vector3.up,
                 startPosition = GridToWorldCoords(position) + Vector3.back * 2
             };
         }

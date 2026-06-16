@@ -8,7 +8,7 @@ public class ScreenAnchor : MonoBehaviour
     Camera cam;
     [SerializeField] Transform anchoredObject;
     /// <summary>
-    /// True to change size preserving width, false to change size preserving height
+    /// True to change size preserving relative width, false to change size preserving height
     /// </summary>
     [SerializeField] bool anchorWidth;
 

@@ -17,6 +17,9 @@ public class SoundController : MonoBehaviour
 
     public AudioSource musicSource;
 
+    [SerializeField] List<AudioLowPassFilter> pauseMuffled = new();
+    public float muffledFrequency;
+
     public void PlayRandomMoveSound()
     {
         blockMoveSource.clip = prop.blockMoveSound.RandomClip;
@@ -67,5 +70,14 @@ public class SoundController : MonoBehaviour
         musicSource.clip = prop.shopMusic.RandomClip;
         musicSource.loop = true;
         musicSource.Play();
+    }
+
+    public void SetPauseMuffling(float percent)
+    {
+        float scaledPercent = 1f - Mathf.Pow(percent - 1f, 6f);
+        foreach (var lp in pauseMuffled)
+        {
+            lp.cutoffFrequency = Mathf.Lerp(22000f, muffledFrequency, scaledPercent);
+        }
     }
 }

@@ -16,7 +16,7 @@ public class BlockEffectFlicker : MonoBehaviour
     void Update()
     {
         Vector3 myPos = transform.position;
-        float opacity = Mathf.Sin(Time.time * flickerWaveSpeed + (myPos.x + myPos.y) * flickerWavePosRelation) / 10f + 0.3f;
+        float opacity = Mathf.Sin(Time.time * flickerWaveSpeed + (myPos.x + myPos.y) * flickerWavePosRelation) / 20f + 0.15f;
         Color myColor = render.color;
         myColor.a = opacity;
         render.color = myColor;

@@ -79,9 +79,10 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
+    - _BgNoiseSpeed: {r: 0.18, g: 0.27, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Normal_Color: {r: 0.047140848, g: 0.040753283, b: 0.041734513, a: 1}
+    - _Normal_Color: {r: 0.020185955, g: 0.19219974, b: 0.23897195, a: 1}
     - _Transition_Color: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &5415222083968762368
