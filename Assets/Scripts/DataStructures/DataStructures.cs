@@ -249,7 +249,7 @@ namespace Tetrex.DataStructures
     /// <summary>
     /// A shorthand for referring to different perms in code. Int representation of this matches with target perm's saveBitIndex
     /// </summary>
-    public enum Perm { TrashToken }
+    public enum Perm { TrashToken, NormalBlockWeight }
 
     public enum ItemPool { NONE, BLOCK, PERM }
 }

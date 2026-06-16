@@ -584,8 +584,8 @@ public class GameController : MonoBehaviour
         // Clear controlled blocks list
         controlledBlocks.Clear();
 
-        // Do actions that may have been queued by activated blocks
-        //DoQueuedBlockActions();
+        // Do actions from controlled blocks
+        DoQueuedBlockActions();
 
         // Check if any rows are full
         List<int> fullRows = new();
@@ -1479,7 +1479,7 @@ public class GameController : MonoBehaviour
     {
         float weightTotal = 0;
 
-        for (int i = 0; i < prop.blockPrefabs.Length; i++) if (equippedBlocks[i]) weightTotal += prop.blockPrefabs[i].Weight;
+        for (int i = 0; i < prop.blockPrefabs.Length; i++) if (equippedBlocks[i]) weightTotal += prop.blockPrefabs[i].Weight * (i == 0 || perms[(int)Perm.NormalBlockWeight] == 0 ? 1f : 2f);
 
         float randomWeight = UnityEngine.Random.Range(0, weightTotal);
 
@@ -1487,8 +1487,8 @@ public class GameController : MonoBehaviour
         {
             if (equippedBlocks[i])
             {
-                if (randomWeight <= prop.blockPrefabs[i].Weight) { return i; }
-                else { randomWeight -= prop.blockPrefabs[i].Weight; }
+                if (randomWeight <= prop.blockPrefabs[i].Weight * (i == 0 || perms[(int)Perm.NormalBlockWeight] == 0 ? 1f : 2f)) { return i; }
+                else { randomWeight -= prop.blockPrefabs[i].Weight * (i == 0 || perms[(int)Perm.NormalBlockWeight] == 0 ? 1f : 2f); }
             }
         }
 

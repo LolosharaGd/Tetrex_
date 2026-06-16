@@ -365,7 +365,10 @@ public class VFXManager : MonoBehaviour
             bgHue += Rand(prop.hueShiftRanges[Mathf.Min(5, power)].x, prop.hueShiftRanges[Mathf.Min(5, power)].y) * (Rand(0f, 1f) <= 0.5f ? 1f : -1f);
         }
 
-        newBgColor = Color.HSVToRGB(bgHue % 360f / 360f, Rand(minSaturation, maxSaturation), Rand(minValue, maxValue));
+        bgHue = bgHue % 360f;
+        if (bgHue < -0f) do { bgHue += 360f; } while (bgHue < -0f);
+
+        newBgColor = Color.HSVToRGB(bgHue / 360f, Rand(minSaturation, maxSaturation), Rand(minValue, maxValue));
     }
 
     public void CameraShake(float power, float time, float speed = 0f)
