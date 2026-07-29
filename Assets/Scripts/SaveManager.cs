@@ -89,6 +89,10 @@ public class SaveManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    // Starts are called right here
+    // Ends are called in the scripts responsible for the end condition (RoundEnd in scoreManager, ShopEnd in shopController)
+    // The scene transition is done in VFXManager after the transition animation is done
+
     public void RoundStart()
     {
         LoadEquippedBlocks();
@@ -128,7 +132,9 @@ public class SaveManager : MonoBehaviour
     public void RoundEnd()
     {
         // Calculate and give money
-        int moneyGain = 1 + Mathf.Max(0, 1 + Mathf.FloorToInt(Mathf.Log((scoreManager.score - scoreManager.scoreGoal) / 1000, 2f)));
+        int l = 2;
+        int s = 1;
+        int moneyGain = s + Mathf.Max(0, l + Mathf.FloorToInt(Mathf.Log((scoreManager.score - scoreManager.scoreGoal) / 1000, 2f)));
         print("Score: " + scoreManager.score + "; Money gained: " + moneyGain + "; Previous money: " + PlayerPrefs.GetInt("money") + "; New money: " + (PlayerPrefs.GetInt("money") + moneyGain));
         PlayerPrefs.SetInt("money", PlayerPrefs.GetInt("money") + moneyGain);
 
@@ -315,6 +321,21 @@ public class SaveManager : MonoBehaviour
         PlayerPrefs.SetInt("RefreshPerm", 1);
 
         SceneManager.LoadScene(0);
+    }
+
+    public void ExitFromRun()
+    {
+
+    }
+
+    public void ExitFromShop()
+    {
+
+    }
+
+    public void ExitGame()
+    {
+
     }
 
     /// <summary>

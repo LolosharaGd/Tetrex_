@@ -11,6 +11,12 @@ public class BlockEffectFlicker : MonoBehaviour
     private void Start()
     {
         render = GetComponent<SpriteRenderer>();
+
+        Vector3 myPos = transform.position;
+        float opacity = Mathf.Sin(Time.time * flickerWaveSpeed + (myPos.x + myPos.y) * flickerWavePosRelation) / 20f + 0.15f;
+        Color myColor = render.color;
+        myColor.a = opacity;
+        render.color = myColor;
     }
 
     void Update()

@@ -47,6 +47,10 @@ public class PropertiesScriptableObject : ScriptableObject
     /// Score goal list in which the index is the level index, run starts at 1
     /// </summary>
     public int[] scoreGoals;
+    /// <summary>
+    /// How many active perms are shown per column in-game
+    /// </summary>
+    public int activePermsPerColumn;
 
     [Header("-== SHOP ==-")]
     /// <summary>
@@ -99,6 +103,7 @@ public class PropertiesScriptableObject : ScriptableObject
     /// Speed of bg color change
     /// </summary>
     public float colorChangeSpeed;
+    public Sprite[] chargeNumberSprites;
 
     [Header("-== SFX ==-")]
     public RandomSound blockMoveSound;

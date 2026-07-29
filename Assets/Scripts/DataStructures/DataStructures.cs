@@ -46,6 +46,7 @@ namespace Tetrex.DataStructures
         [Header("Perm only")]
         public bool isPerm;
         public PermType permType;
+        public ActivePerm activePermSettings;
 
         public ShopBlock Copy()
         {
@@ -249,7 +250,33 @@ namespace Tetrex.DataStructures
     /// <summary>
     /// A shorthand for referring to different perms in code. Int representation of this matches with target perm's saveBitIndex
     /// </summary>
-    public enum Perm { TrashToken, NormalBlockWeight }
+    public enum Perm { TrashToken, NormalBlockWeight, DefuseDrop }
 
     public enum ItemPool { NONE, BLOCK, PERM }
+
+    public enum ChargeType { NONE, PERROW, PERSHAPELAND }
+
+    [System.Serializable]
+    public class ActivePerm
+    {
+        public Perm type;
+        public int charge;
+        public int maxCharge;
+        public ChargeType chargeType;
+        public int unitsPerCharge;
+        public int subcharge;
+
+        public ActivePerm Copy()
+        {
+            return new ActivePerm()
+            {
+                type = type,
+                charge = charge,
+                maxCharge = maxCharge,
+                chargeType = chargeType,
+                unitsPerCharge = unitsPerCharge,
+                subcharge = subcharge
+            };
+        }
+    }
 }

@@ -9,6 +9,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Tetrex.DataStructures;
 using Tetrex.Blocks;
+using UnityEngine.Video;
 
 public class GameController : MonoBehaviour
 {
@@ -31,6 +32,19 @@ public class GameController : MonoBehaviour
     [Header("-== GameObject Parents ==-")]
     public bool[] equippedBlocks;
     public int[] perms;
+    public int ActivePermAmount
+    {
+        get
+        {
+            int total = 0;
+            for (int i = 0; i < prop.shopPerms.Length; i++)
+            {
+                if (prop.shopPerms[i].permType == PermType.ACTIVE && perms[i] > 0)
+                    total++;
+            }
+            return total;
+        }
+    }
     /// <summary>
     /// Parent for all blocks
     /// </summary>
@@ -115,6 +129,18 @@ public class GameController : MonoBehaviour
     public List<GameObject> heldShapePreviews = new();
     [SerializeField] List<string> prevShapes = new();
     public int prevShapeBufferSize;
+    /// <summary>
+    /// Currently stored shape (clone from list of blockShapes). Used for active perms that take control
+    /// </summary>
+    public BlockShape storedShape;
+    /// <summary>
+    /// All blocks in currently stored shape. Used for active perms that take control
+    /// </summary>
+    public List<GameObject> storedShapeBlocks = new();
+    /// <summary>
+    /// All dash preview blocks in currently stored shape. Used for active perms that take control
+    /// </summary>
+    public List<GameObject> storedShapePreviews = new();
 
     [Header("-== Previews ==-")]
     /// <summary>
@@ -138,6 +164,23 @@ public class GameController : MonoBehaviour
 
     [Header("-== In-game text ==-")]
     [SerializeField] TextMeshProUGUI trashTokensText;
+    [SerializeField] TextMeshProUGUI heldText;
+
+    [Header("-== Perm specials ==-")]
+    [SerializeField] MenuBox permMB;
+    [SerializeField] List<SpriteRenderer> permSprites = new();
+    public List<ActivePerm> activePerms = new();
+    [SerializeField] Transform activePermParent;
+    public int currentActivePerm;
+    [SerializeField] Transform currentActivePermIndicator;
+    [SerializeField] SpriteRenderer curAPChargeIndicator;
+    bool busyWithActivePerm;
+    public ActivePerm CurrentActivePerm { get => activePerms[currentActivePerm]; }
+
+    int dfsactCurrentColumn;
+    [SerializeField] SpriteRenderer dfsactDefuseConnector;
+    [SerializeField] Transform dfsactStartPreview;
+    [SerializeField] Transform dfsactEndPreview;
 
     [Header("-== Stats and tokens ==-")]
     public int currentTrashTokens;
@@ -179,6 +222,8 @@ public class GameController : MonoBehaviour
     float prevHold;
     float prevTrash;
     float prevPause;
+    float prevActivatePerm;
+    float prevSwitchPerm;
 
     /// <summary>
     /// Lines cleared before end of frame
@@ -197,6 +242,10 @@ public class GameController : MonoBehaviour
     /// Bottom left corner of held shape indicator in grid
     /// </summary>
     Vector2Int heldShapePreviewStartingPosition = new Vector2Int(11, 10);
+    /// <summary>
+    /// Bottom left corner of the active perms box
+    /// </summary>
+    Vector2Int activePermBoxStartPos = new Vector2Int(-2, 8);
 
     [Header("-== Global ==-")]
     /// <summary>
@@ -241,6 +290,48 @@ public class GameController : MonoBehaviour
         string ttText = Mathf.Clamp(currentTrashTokens, 0, 99999) + "";
         for (int i = ttText.Length; i < 5; i++) ttText = "0" + ttText;
         trashTokensText.text = ttText;
+
+        // Check active perms
+        for (int i = 0; i < prop.shopPerms.Length; i++)
+        {
+            if (prop.shopPerms[i].permType == PermType.ACTIVE && perms[i] > 0)
+            {
+                activePerms.Add(prop.shopPerms[i].activePermSettings.Copy());
+                SpriteRenderer newPerm = Instantiate(prop.shopPerms[i].spritePrefab, Vector3.zero, Quaternion.identity, activePermParent).GetComponent<SpriteRenderer>();
+                permSprites.Add(newPerm);
+                newPerm.transform.localPosition =
+                    GridToWorldCoords(activePermBoxStartPos) - new Vector3(Mathf.Floor(activePerms.Count / (float)prop.activePermsPerColumn - 0.01f), Mathf.Min(prop.activePermsPerColumn - 1, activePerms.Count - 1)) * 0.4f;
+            }
+        }
+
+        // Place and resize active perm menu box
+        if (ActivePermAmount > 0)
+        {
+            permMB.gameObject.SetActive(true);
+            vfxManager.gameTTs[23].startPosition = GridToWorldCoords(activePermBoxStartPos) -
+                new Vector3(Mathf.Floor(ActivePermAmount / (float)prop.activePermsPerColumn - 0.01f) / 2f, Mathf.Min(prop.activePermsPerColumn - 1, ActivePermAmount - 1) / 2f, 0f) * 0.4f;
+            permMB.size.x = Mathf.Floor(ActivePermAmount / (float)prop.activePermsPerColumn - 0.01f) + 1;
+            permMB.size.y = Mathf.Min(prop.activePermsPerColumn, ActivePermAmount);
+        }
+        else
+        {
+            permMB.gameObject.SetActive(false);
+        }
+
+        // Place active perm indicator
+        if (ActivePermAmount > 0)
+        {
+            currentActivePermIndicator.gameObject.SetActive(true);
+            currentActivePermIndicator.localPosition =
+                GridToWorldCoords(activePermBoxStartPos) -
+                new Vector3(currentActivePerm / prop.activePermsPerColumn, currentActivePerm % prop.activePermsPerColumn, 2.5f) * 0.4f;
+
+            curAPChargeIndicator.sprite = prop.chargeNumberSprites[Mathf.Min(9, CurrentActivePerm.charge)];
+        }
+        else
+        {
+            currentActivePermIndicator.gameObject.SetActive(false);
+        }
     }
 
     float PressCheck(float cur, float prev)
@@ -259,6 +350,8 @@ public class GameController : MonoBehaviour
         float hold = Input.GetAxisRaw("Hold");
         float trash = Input.GetAxisRaw("Trash");
         float pause = Input.GetAxisRaw("Pause");
+        float activatePerm = Input.GetAxisRaw("ActivatePerm");
+        float switchPerm = Input.GetAxisRaw("SwitchPerm");
 
         if (!lost && !won && vfxManager.IGTransitionProgress <= 0f)
         {
@@ -273,102 +366,189 @@ public class GameController : MonoBehaviour
 
             if (!paused)
             {
-                // If pressing hoizontal movement
-                if (x != 0)
+                // Switch active perm
+                if (switchPerm - prevSwitchPerm == -1f && ActivePermAmount > 0)
                 {
-                    // If can move (timer is up)
-                    if (blockHorizMoveTimer <= 0)
+                    currentActivePerm++;
+                    if (currentActivePerm >= activePerms.Count) currentActivePerm = 0;
+                }
+
+                // Place active perm indicator
+                if (ActivePermAmount > 0)
+                {
+                    currentActivePermIndicator.gameObject.SetActive(true);
+                    currentActivePermIndicator.localPosition =
+                        GridToWorldCoords(activePermBoxStartPos) -
+                        new Vector3(currentActivePerm / prop.activePermsPerColumn, currentActivePerm % prop.activePermsPerColumn, 2.5f) * 0.4f;
+
+                    curAPChargeIndicator.sprite = prop.chargeNumberSprites[Mathf.Min(9, CurrentActivePerm.charge)]; 
+                }
+                else
+                {
+                    currentActivePermIndicator.gameObject.SetActive(false);
+                }
+
+                if (!busyWithActivePerm)
+                {
+                    // If pressing hoizontal movement
+                    if (x != 0)
                     {
-                        // Move
-                        bool canMoveBlocks = MoveControlledBlocks(new Vector2Int((int)x, 0));
+                        // If can move (timer is up)
+                        if (blockHorizMoveTimer <= 0)
+                        {
+                            // Move
+                            bool canMoveBlocks = MoveControlledBlocks(new Vector2Int((int)x, 0));
 
-                        // Reset timer, reset to higher value if first click
-                        blockHorizMoveTimer = prevX != x ? prop.blockHorizMoveFirstWait : 1 / prop.blockHorizMoveSpeed;
+                            // Reset timer, reset to higher value if first click
+                            blockHorizMoveTimer = prevX != x ? prop.blockHorizMoveFirstWait : 1 / prop.blockHorizMoveSpeed;
 
-                        // Play the sound
-                        soundController.PlayRandomMoveSound();
+                            // Play the sound
+                            soundController.PlayRandomMoveSound();
+                        }
+                    }
+                    else
+                    {
+                        // Set timer to 0 (timer's up)
+                        blockHorizMoveTimer = 0;
+                    }
+
+                    // If pressing down
+                    if (y == -1)
+                    {
+                        // If can move (timer is up)
+                        if (blockVertMoveTimer <= 0)
+                        {
+                            // Move
+                            blockFallTimer = 0;
+
+                            // Reset timer, reset to higher value if first click
+                            blockVertMoveTimer = prevY != y ? prop.blockVertMoveFirstWait : 1 / prop.blockVertMoveSpeed;
+
+                            // Play the sound
+                            soundController.PlayRandomMoveSound();
+                        }
+                    }
+                    else
+                    {
+                        // Set timer to 0 (timer's up)
+                        blockVertMoveTimer = 0;
+                    }
+
+                    // Blocks fall
+                    if (blockFallTimer <= 0)
+                    {
+                        ControlledBlocksFall();
+
+                        blockFallTimer = 1 / prop.blockFallSpeed;
+                    }
+
+                    // Trash shape
+                    if (PressCheck(trash, prevTrash) != 0f && currentTrashTokens > 0)
+                    {
+                        TrashControlledBlocks();
+
+                        currentTrashTokens--;
+
+                        soundController.PlayRandomTrashSound();
+                    }
+
+                    // Block dash down
+                    if (PressCheck(dash, prevDash) != 0f)
+                    {
+                        int iteration = 0;
+                        blockFallTimer = dash == 1 ? 0 : 1.5f / prop.blockFallSpeed;
+                        bool canDashDown = true;
+                        do
+                        {
+                            canDashDown = MoveControlledBlocks(new Vector2Int(0, -1));
+                            iteration++;
+                        }
+                        while (canDashDown && iteration <= 30);
+                    }
+
+                    // If pressed one of the rotate buttons
+                    if (rotate != 0 && prevRotate != rotate)
+                    {
+                        RotateControlledBLocks(rotate == 1);
+
+                        soundController.PlayRandomRotateSound();
+                    }
+
+                    // Activate all blocks that activate on user input
+                    if (PressCheck(activateBlocks, prevActivateBlocks) != 0f)
+                    {
+                        foreach (var block in controlledBlocks) if (block.activateOnUserInput) ActivateBlock(block);
+
+                        DoQueuedBlockActions();
+                    }
+
+                    // If player pressed hold
+                    if (hold == 1 && prevHold == 0)
+                    {
+                        SwapHeldBlocks();
+                    }
+
+                    // Activate perm
+                    if (activatePerm - prevActivatePerm == -1f && ActivePermAmount > 0)
+                    {
+                        if (CurrentActivePerm.charge > 0)
+                            ActivatePerm();
                     }
                 }
                 else
                 {
-                    // Set timer to 0 (timer's up)
-                    blockHorizMoveTimer = 0;
-                }
-
-                // If pressing down
-                if (y == -1)
-                {
-                    // If can move (timer is up)
-                    if (blockVertMoveTimer <= 0)
+                    if (CurrentActivePerm.type == Perm.DefuseDrop)
                     {
-                        // Move
-                        blockFallTimer = 0;
+                        // If pressing hoizontal movement
+                        if (x != 0)
+                        {
+                            // If can move (timer is up)
+                            if (blockHorizMoveTimer <= 0)
+                            {
+                                // Move
+                                dfsactCurrentColumn = (int)Mathf.Clamp(dfsactCurrentColumn + x, 0, 9);
 
-                        // Reset timer, reset to higher value if first click
-                        blockVertMoveTimer = prevY != y ? prop.blockVertMoveFirstWait : 1 / prop.blockVertMoveSpeed;
+                                // Reset timer, reset to higher value if first click
+                                blockHorizMoveTimer = prevX != x ? prop.blockHorizMoveFirstWait : 1 / prop.blockHorizMoveSpeed;
 
-                        // Play the sound
-                        soundController.PlayRandomMoveSound();
+                                // Play the sound
+                                soundController.PlayRandomMoveSound();
+                            }
+                        }
+                        else
+                        {
+                            // Set timer to 0 (timer's up)
+                            blockHorizMoveTimer = 0;
+                        }
+
+                        // Process Defuse Drop perm
+                        if (CurrentActivePerm.type == Perm.DefuseDrop)
+                        {
+                            Vector2Int defuseBEPosition = new Vector2Int(dfsactCurrentColumn, 0);
+
+                            // Find the highest block in the column and save the position above it
+                            for (int i = 19; i >= 0; i--)
+                            {
+                                if (blockGrid[dfsactCurrentColumn, i] != null)
+                                {
+                                    defuseBEPosition = new Vector2Int(dfsactCurrentColumn, i + 1);
+                                    break;
+                                }
+                            }
+
+                            dfsactDefuseConnector.size = new Vector2(dfsactDefuseConnector.size.x, 19 - defuseBEPosition.y);
+                            dfsactDefuseConnector.transform.position = GridToWorldCoords(new Vector2Int(dfsactCurrentColumn, 20)) - Vector3.up * 0.2f - (9.5f - defuseBEPosition.y / 2f) * 0.4f * Vector3.up + Vector3.back * 2;
+
+                            dfsactStartPreview.position = GridToWorldCoords(new Vector2Int(dfsactCurrentColumn, 20)) + Vector3.back * 2;
+                            dfsactEndPreview.position = GridToWorldCoords(defuseBEPosition) + Vector3.back * 2;
+                        }
+
+                        // Activate the perm
+                        if (activatePerm - prevActivatePerm == -1f)
+                        {
+                            ActivatePerm();
+                        }
                     }
-                }
-                else
-                {
-                    // Set timer to 0 (timer's up)
-                    blockVertMoveTimer = 0;
-                }
-
-                // Blocks fall
-                if (blockFallTimer <= 0)
-                {
-                    ControlledBlocksFall();
-
-                    blockFallTimer = 1 / prop.blockFallSpeed;
-                }
-
-                // Trash shape
-                if (PressCheck(trash, prevTrash) != 0f && currentTrashTokens > 0)
-                {
-                    TrashControlledBlocks();
-
-                    currentTrashTokens--;
-
-                    soundController.PlayRandomTrashSound();
-                }
-
-                // Block dash down
-                if (PressCheck(dash, prevDash) != 0f)
-                {
-                    int iteration = 0;
-                    blockFallTimer = dash == 1 ? 0 : 1.5f / prop.blockFallSpeed;
-                    bool canDashDown = true;
-                    do
-                    {
-                        canDashDown = MoveControlledBlocks(new Vector2Int(0, -1));
-                        iteration++;
-                    }
-                    while (canDashDown && iteration <= 30);
-                }
-
-                // If pressed one of the rotate buttons
-                if (rotate != 0 && prevRotate != rotate)
-                {
-                    RotateControlledBLocks(rotate == 1);
-
-                    soundController.PlayRandomRotateSound();
-                }
-
-                // Activate all blocks that activate on user input
-                if (PressCheck(activateBlocks, prevActivateBlocks) != 0f)
-                {
-                    foreach (var block in controlledBlocks) if (block.activateOnUserInput) ActivateBlock(block);
-
-                    DoQueuedBlockActions();
-                }
-
-                // If player pressed hold
-                if (hold == 1 && prevHold == 0)
-                {
-                    SwapHeldBlocks();
                 }
 
                 // Update trash tokens text
@@ -387,6 +567,8 @@ public class GameController : MonoBehaviour
                 prevActivateBlocks = activateBlocks;
                 prevHold = hold;
                 prevTrash = trash;
+                prevActivatePerm = activatePerm;
+                prevSwitchPerm = switchPerm;
             }
         }
         else if (won)
@@ -632,8 +814,8 @@ public class GameController : MonoBehaviour
         // Change BG color
         vfxManager.ChangeBgColor(extraClearedLines + (extraClearedLines == 0 ? 0 : LineClearBonus) + Mathf.Max(0, scoreManager.combo - 1));
 
-        // If after adding the score player didn't win
-        if (!won)
+        // If after adding the score player didn't win and didn't lose
+        if (!won && !lost)
         {
             // Spawn new shape
             bool spawnedNewShape = SpawnRandomShape(shapeStartingPosition);
@@ -1041,6 +1223,20 @@ public class GameController : MonoBehaviour
                 linesClearedForTrT -= linesForTrashToken;
                 currentTrashTokens++;
             }
+
+            // Charge things that need to be
+            foreach (var acPerm in activePerms)
+            {
+                if (acPerm.chargeType == ChargeType.PERROW)
+                {
+                    acPerm.subcharge++;
+                    if (acPerm.subcharge >= acPerm.unitsPerCharge)
+                    {
+                        acPerm.subcharge = 0;
+                        acPerm.charge = Mathf.Min(acPerm.charge + 1, acPerm.maxCharge);
+                    }
+                }
+            }
         }
     }
 
@@ -1203,7 +1399,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    // -= Shape holding =-
+    // -= Shape holding and storing =-
 
     /// <summary>
     /// A function that moves currently controlled shape to held shape. IMPORTANT: This function ignores the shape that is currently held
@@ -1292,7 +1488,8 @@ public class GameController : MonoBehaviour
             heldShapePreviews.Clear();
 
             // Move current shape to held
-            MoveCurrentShapeToHeld();
+            if (controlledBlocks.Count > 0)
+                MoveCurrentShapeToHeld();
 
             // Move reserved lists to actual lists
             foreach (var reservedBlock in reservedShapeBlocks)
@@ -1331,6 +1528,116 @@ public class GameController : MonoBehaviour
         }
 
         UpdateNextShapePreview();
+        UpdateDashPreview();
+    }
+
+    /// <summary>
+    /// A function that stores currently controlled shape. IMPORTANT: This function overwrites the shape that is currently stored
+    /// </summary>
+    public void StoreCurrentShape()
+    {
+        // Delete controlled shape from the grid
+        foreach (var block in controlledBlocks)
+        {
+            Vector2Int blockPos = block.GetPosInGrid(blockGrid);
+            blockGrid[blockPos.x, blockPos.y] = null;
+        }
+
+        // Mark all controlled blocks as not controlled
+        foreach (var block in controlledBlocks)
+            block.isControlled = false;
+
+        // Move all controlled blocks to storage
+        for (int i = 0; i < controlledBlocks.Count; i++)
+        {
+            controlledBlocks[i].gameObject.SetActive(false);
+            storedShapeBlocks.Add(controlledBlocks[i].gameObject);
+        }
+
+        // Clear controlled blocks list
+        controlledBlocks.Clear();
+
+        // Deactivate all preview blocks
+        foreach (var preview in previewDashBlocks)
+        {
+            preview.gameObject.SetActive(false);
+            storedShapePreviews.Add(preview.gameObject);
+        }
+
+        // Clear dash preview blocks list
+        previewDashBlocks.Clear();
+
+        // Set storedShape to current shape
+        storedShape = (BlockShape)currentShape.Clone();
+
+        // Set all rotations in stored shape to 0
+        foreach (var rotation in storedShape.rotations) rotation.nextRotationIndex = 0;
+    }
+
+    /// <summary>
+    /// Takes the stored shape and controls it
+    /// </summary>
+    public void TakeStoredBlocks()
+    {
+        // Check if there is even a stored shape
+        if (storedShapeBlocks.Count == 0) return;
+
+        // Delete current shape so it doesn't interfere
+        if (controlledBlocks.Count > 0)
+        {
+            TrashControlledBlocks();
+        }
+
+        // Reserve currently held shape and it's dash previews
+        List<GameObject> reservedShapeBlocks = storedShapeBlocks.CloneViaFakeSerialization();
+        List<GameObject> reservedShapePreviews = storedShapePreviews.CloneViaFakeSerialization();
+        BlockShape reservedShape = (BlockShape)storedShape.Clone();
+
+        // Clear held lists
+        storedShapeBlocks.Clear();
+        storedShapePreviews.Clear();
+
+        // Move reserved lists to actual lists
+        foreach (var reservedBlock in reservedShapeBlocks)
+            controlledBlocks.Add(reservedBlock.GetComponent<NormalBlock>());
+        foreach (var reservedPreview in reservedShapePreviews)
+            previewDashBlocks.Add(reservedPreview.transform);
+        currentShape = reservedShape;
+
+        // Activate dash previews
+        foreach (var preview in previewDashBlocks)
+            preview.gameObject.SetActive(true);
+
+        // Set controlled in reserved blocks to true
+        foreach (var block in controlledBlocks)
+        {
+            block.isControlled = true;
+            block.gameObject.SetActive(true);
+        }
+
+        // Move reserved blocks to shape starting position and update TTs
+        for (int i = 0; i < controlledBlocks.Count; i++)
+        {
+            Vector2Int blockPos = shapeStartingPosition + currentShape.positions[i] + currentShape.startingPosition;
+            controlledBlocks[i].transform.position = GridToWorldCoords(blockPos);
+            controlledBlocks[i].transitionTransformation.startPosition = GridToWorldCoords(blockPos);
+
+            // Also add the block to grid
+            blockGrid[blockPos.x, blockPos.y] = controlledBlocks[i];
+        }
+
+        // Reset block fall timer
+        blockFallTimer = 1 / prop.blockFallSpeed;
+
+        // Update TTs directions
+        foreach (var block in controlledBlocks)
+        {
+            block.transitionTransformation.direction = Vector3.up;
+        }
+
+        storedShapeBlocks.Clear();
+        storedShapePreviews.Clear();
+
         UpdateDashPreview();
     }
 
@@ -1488,6 +1795,70 @@ public class GameController : MonoBehaviour
         vfxManager.blurringNow = false;
     }
 
+    // -= Active Perms =-
+
+    public void ActivatePerm()
+    {
+        // TODO check for perm being recharged
+
+        if (!busyWithActivePerm)
+        {
+            busyWithActivePerm = true;
+
+            if (CurrentActivePerm.type == Perm.DefuseDrop)
+            {
+                dfsactCurrentColumn = 5;
+                SwapHeldBlocks();
+                StoreCurrentShape();
+
+                dfsactDefuseConnector.gameObject.SetActive(true);
+                dfsactStartPreview.gameObject.SetActive(true);
+                dfsactEndPreview.gameObject.SetActive(true);
+
+                CurrentActivePerm.charge = Mathf.Max(0, CurrentActivePerm.charge - 1);
+
+                heldText.text = "STRD";
+            }
+        }
+        else
+        {
+            if (CurrentActivePerm.type == Perm.DefuseDrop)
+            {
+                busyWithActivePerm = false;
+
+                // Place defuse BE above the highest block in the column
+                bool placedAnything = false;
+                for (int i = 19; i >= 0; i--)
+                {
+                    if (blockGrid[dfsactCurrentColumn, i] != null)
+                    {
+                        PlaceBlockEffect(new Vector2Int(dfsactCurrentColumn, i + 1), BlockEffect.DEFUSE);
+                        placedAnything = true;
+                        break;
+                    }
+                }
+
+                // No blocks are on this column
+                if (!placedAnything)
+                    PlaceBlockEffect(new Vector2Int(dfsactCurrentColumn, 0), BlockEffect.DEFUSE);
+
+                TakeStoredBlocks();
+                SwapHeldBlocks();
+
+                // Indicators
+                dfsactDefuseConnector.gameObject.SetActive(false);
+                dfsactStartPreview.gameObject.SetActive(false);
+                dfsactEndPreview.gameObject.SetActive(false);
+
+                heldText.text = "HELD";
+
+                // Effects
+                vfxManager.CameraShake(0.05f, 0.3f, 40);
+                soundController.PlayRandomDashSound();
+            }
+        }
+    }
+
     // -= Extra functions =-
 
     public Vector3 GridToWorldCoords(Vector2Int position)
@@ -1530,6 +1901,7 @@ public class GameController : MonoBehaviour
     public void Lose()
     {
         print("you lost ig");
+        lost = true;
     }
 
     public void OnDrawGizmos()

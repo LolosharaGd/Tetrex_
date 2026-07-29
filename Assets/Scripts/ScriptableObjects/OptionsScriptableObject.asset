@@ -374,6 +374,7 @@ MonoBehaviour:
   blockVertMoveFirstWait: 0.5
   scoreRewards: 0000000064000000fa000000f4010000e8030000c4090000
   scoreGoals: fa000000e8030000dc050000d0070000b80b0000a00f000088130000581b000028230000f82a0000b036000068420000204e0000a861000030750000409c0000
+  activePermsPerColumn: 5
   shopPerms:
   - name: Trash Token
     description: +1 trash token
@@ -390,11 +391,18 @@ MonoBehaviour:
     blockSelfDestructs: 0
     isPerm: 1
     permType: 2
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Normal Block Weight
     description: Double the special block spawn rate
     notes: 
     spritePrefab: {fileID: 9082082322137569350, guid: 6ce9fb2d26e75ae46af239890b5907ea, type: 3}
-    cost: 6
+    cost: 5
     rarity: 0
     alignment: 1
     saveBitIndex: 1
@@ -405,6 +413,35 @@ MonoBehaviour:
     blockSelfDestructs: 0
     isPerm: 1
     permType: 1
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
+  - name: Defuse Drop
+    description: Place a defuser right above the highest block in a chosen column
+    notes: 
+    spritePrefab: {fileID: 9082082322137569350, guid: 94a3e63e56cd3ac48aad7479873b747a, type: 3}
+    cost: 5
+    rarity: 0
+    alignment: 1
+    saveBitIndex: 2
+    isEquipped: 0
+    blockActivatesOnLanding: 0
+    blockActivatesOnClearRow: 0
+    blockActivatesOnUserInput: 0
+    blockSelfDestructs: 0
+    isPerm: 1
+    permType: 0
+    activePermSettings:
+      type: 2
+      charge: 1
+      maxCharge: 2
+      chargeType: 1
+      unitsPerCharge: 1
+      subcharge: 0
   allBlocks:
   - name: Remove Plus
     description: Removes block in a plus-shape
@@ -421,6 +458,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Remove Cross
     description: Removes blocks in a cross-shape
     notes: I, personally, hate this block
@@ -436,6 +480,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Remove Square
     description: Removes 8 adjacent blocks
     notes: Literally just + and X blocks combined
@@ -451,6 +502,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Remove Row
     description: Clears row it is in
     notes: Pretty good for maintaining combo
@@ -466,6 +524,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Spawn Square
     description: Fills 8 adjacent spaces
     notes: With this you can clear 5 rows with one piece
@@ -481,6 +546,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Spawn Dive
     description: Fills every empty space below itself
     notes: With this one you can clear a lot of lines in one piece
@@ -496,6 +568,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Stop
     description: Lands currently controlled blocks mid-air
     notes: I literally used this one 3-4 times ever
@@ -511,6 +590,13 @@ MonoBehaviour:
     blockSelfDestructs: 0
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Invert Row
     description: Inverts row it is in
     notes: 'todo: add a note for this block'
@@ -526,6 +612,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Phantom
     description: Disappears
     notes: Hey that block is pr
@@ -541,6 +634,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Spawn Dash Right
     description: Fills empty spaces to its right
     notes: Can be used as a row clear if placed against the left wall
@@ -556,6 +656,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Spawn Dash Left
     description: Fills empty spaces to its left
     notes: Can be used as a row clear if placed against the right wall
@@ -571,6 +678,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Spawn Diagonal
     description: Fills empty spaces diagonally down left and down right
     notes: Can be quite annoying if the stack is high
@@ -586,6 +700,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Spawn Drop
     description: Fills highest hole with in its and neighboring columns
     notes: If you are confused - just drops 3 blocks until they land on a hole below
@@ -602,6 +723,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Remove Dive
     description: Removes every block below itself
     notes: what did i think when creating this?
@@ -617,6 +745,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Spawn Fill
     description: Fills lowest 5 empty spaces
     notes: Can give you 5 rows cleared at once!
@@ -632,6 +767,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Gravity
     description: Makes every block fall farthest it can
     notes: g
@@ -647,6 +789,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: EMined Dive
     description: Places a mine on every spot below itself
     notes: does not immediately destroy blocks tho
@@ -662,6 +811,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Cursed Row
     description: When a row is cleared with this block in it, it doesn't count towards
       points given
@@ -678,6 +834,13 @@ MonoBehaviour:
     blockSelfDestructs: 0
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: EProtected Row
     description: Protects every block on its row
     notes: 
@@ -693,6 +856,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: EProtected Square
     description: Protects itself and 8 adjacent blocks
     notes: 
@@ -708,6 +878,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   - name: Row Clear Chain
     description: Clears the row below itself
     notes: 
@@ -723,6 +900,13 @@ MonoBehaviour:
     blockSelfDestructs: 1
     isPerm: 0
     permType: 0
+    activePermSettings:
+      type: 0
+      charge: 0
+      maxCharge: 0
+      chargeType: 0
+      unitsPerCharge: 0
+      subcharge: 0
   scrollBlockSpacing: 1.25
   centralScrollBlockAddedSpacing: 0.25
   normalBlockSize: 1
@@ -739,6 +923,17 @@ MonoBehaviour:
   - {x: 70, y: 120}
   - {x: 120, y: 180}
   colorChangeSpeed: 0.005
+  chargeNumberSprites:
+  - {fileID: 21300000, guid: 70bd5a5c06520c8408408dfd202f0ada, type: 3}
+  - {fileID: 21300000, guid: ed5e6b5bdf5741e4790fa4cf39cab252, type: 3}
+  - {fileID: 21300000, guid: 43afb2d72602b4b40bcac1d4a554df62, type: 3}
+  - {fileID: 21300000, guid: f6a8f829158527d4daf7378591d1bcc6, type: 3}
+  - {fileID: 21300000, guid: 866c9af579d9f6c44af4ef2eede1b94d, type: 3}
+  - {fileID: 21300000, guid: 66a55cd84b2049e45bbc890e9c6784ed, type: 3}
+  - {fileID: 21300000, guid: fa43ace94b107b24b848072a57a0ee11, type: 3}
+  - {fileID: 21300000, guid: 871ffe81c2557644292205ad5eed4720, type: 3}
+  - {fileID: 21300000, guid: 3e313c4b29de7f54c83531f058849497, type: 3}
+  - {fileID: 21300000, guid: 01e578f49973733468a4c3e81c5f0ae6, type: 3}
   blockMoveSound:
     name: Move
     clips:
