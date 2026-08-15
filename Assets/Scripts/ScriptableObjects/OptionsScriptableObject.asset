@@ -430,7 +430,7 @@ MonoBehaviour:
     saveBitIndex: 2
     isEquipped: 0
     blockActivatesOnLanding: 0
-    blockActivatesOnClearRow: 0
+    blockActivatesOnClearRow: 1
     blockActivatesOnUserInput: 0
     blockSelfDestructs: 0
     isPerm: 1

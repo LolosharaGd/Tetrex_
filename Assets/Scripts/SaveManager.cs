@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms.Impl;
 using Tetrex.DataStructures;
 using UnityEditor;
+using TMPro;
 
 public class SaveManager : MonoBehaviour
 {
@@ -26,12 +27,34 @@ public class SaveManager : MonoBehaviour
     [SerializeField] Material shopBgMaterial;
     [SerializeField] Material transitionMaterial;
 
+    [Header("-== ALPHA BUILD STUFF ==-")]
+    [SerializeField] GameObject controlsText;
+
     void Awake()
     {
         if (inGame)
             RoundStart();
         else if (inShop)
             ShopStart();
+    }
+
+    void Update()
+    {
+        float pQuit = Input.GetAxisRaw("Debug Quit");
+        float pCont = Input.GetAxisRaw("Debug Controls");
+
+        if (pQuit != 0f)
+        {
+            if (inGame)
+                ExitFromRun();
+            else if (inShop)
+                ExitFromShop();
+            else if (inMenu)
+                ExitGame();
+        }
+
+        if (controlsText != null)
+            controlsText.SetActive(pCont != 0f);
     }
 
     public void LoadEquippedBlocks()
@@ -153,6 +176,12 @@ public class SaveManager : MonoBehaviour
 
         PlayerPrefs.Save();
         vfxManager.roundEndingAnimation = true;
+
+        // DEBUG: Quit after st3 boss
+        if (LevelToLevelInStage(PlayerPrefs.GetInt("level")) == 3 && LevelToStage(PlayerPrefs.GetInt("level")) == 3)
+        {
+            ExitFromRun();
+        }
     }
 
     public void ShopStart()
@@ -325,17 +354,18 @@ public class SaveManager : MonoBehaviour
 
     public void ExitFromRun()
     {
-
+        SceneManager.LoadScene(2);
     }
 
     public void ExitFromShop()
     {
-
+        SceneManager.LoadScene(2);
     }
 
     public void ExitGame()
     {
-
+        // This is a WebGL build, so this doesn't do anything
+        Application.Quit();
     }
 
     /// <summary>

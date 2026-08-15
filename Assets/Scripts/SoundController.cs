@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Tetrex.DataStructures;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class SoundController : MonoBehaviour
