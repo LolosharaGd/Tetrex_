@@ -897,7 +897,7 @@ MonoBehaviour:
     - active blocks in shape (rn only pause block)\nContorls in shop:\nWASD/arrows
     - choose block (vert.); change scroll (horiz.)\n\u041F\u0440\u043E\u0431\u0435\u043B
     - buy/sell block\nE - exit the shop (only after buying something)\nEverywhere:\nP
-    - exit to main menu\nI - show controls"
+    - exit to main menu/exit the game\nI - show controls"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a4171b6c5d45662489796aa7ef9ce423, type: 2}
   m_sharedMaterial: {fileID: -6476071046175778270, guid: a4171b6c5d45662489796aa7ef9ce423, type: 2}

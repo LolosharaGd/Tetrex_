@@ -194,7 +194,7 @@ public class VFXManager : MonoBehaviour
 
             if (IGTransitionProgress >= 1f)
             {
-                SceneManager.LoadScene(1);
+                SceneManager.LoadScene(2);
             }
         }
         else
@@ -356,7 +356,7 @@ public class VFXManager : MonoBehaviour
 
             if (shopBgMaterial.GetFloat("_Transition_Progress") >= 1f)
             {
-                SceneManager.LoadScene(0);
+                SceneManager.LoadScene(1);
             }
         }
         else

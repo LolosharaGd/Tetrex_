@@ -349,17 +349,17 @@ public class SaveManager : MonoBehaviour
         // Prepare perm refresh
         PlayerPrefs.SetInt("RefreshPerm", 1);
 
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     public void ExitFromRun()
     {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(0);
     }
 
     public void ExitFromShop()
     {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(0);
     }
 
     public void ExitGame()
